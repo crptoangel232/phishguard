@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard — AI Phishing URL Detector</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <h1>PhishGuard</h1>
+        <span class="badge">AI-Powered</span>
+      </div>
+      <p class="subtitle">Detect phishing URLs using machine learning — 18 feature analysis with real-time risk scoring</p>
+    </header>
+
+    <!-- Input Section -->
+    <section class="input-section">
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="Enter a URL (e.g., paypal-secure-login.tk/account/verify)" autocomplete="off">
+        <button id="scanBtn" onclick="scanUrl()">SCAN</button>
+      </div>
+      <div class="quick-test">
+        <span>Quick test:</span>
+        <button class="test-btn" onclick="testUrl('https://www.google.com/search?q=hello')">Legitimate</button>
+        <button class="test-btn" onclick="testUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button>
+        <button class="test-btn" onclick="testUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button>
+      </div>
+    </section>
+
+    <!-- Loading -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Analyzing URL...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="error hidden"></div>
+
+    <!-- Results -->
+    <div id="results" class="results hidden">
+      <!-- Risk Score -->
+      <div class="risk-score-card">
+        <div class="risk-gauge">
+          <div class="gauge-circle" id="gaugeCircle">
+            <div class="gauge-value" id="riskScore">0</div>
+            <div class="gauge-label">RISK SCORE</div>
+          </div>
+        </div>
+        <div class="risk-info">
+          <div class="risk-level" id="riskLevel">LOW</div>
+          <div class="risk-url" id="scannedUrl"></div>
+          <div class="risk-prob">
+            <div class="prob-bar">
+              <div class="prob-label">Legitimate</div>
+              <div class="prob-fill legit" id="legitBar"></div>
+              <div class="prob-pct" id="legitPct">0%</div>
+            </div>
+            <div class="prob-bar">
+              <div class="prob-label">Phishing</div>
+              <div class="prob-fill phish" id="phishBar"></div>
+              <div class="prob-pct" id="phishPct">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-card">
+        <div class="summary-stat">
+          <div class="stat-val" id="suspiciousCount">0</div>
+          <div class="stat-label">Suspicious Features</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="stat-val" id="totalFeatures">18</div>
+          <div class="stat-label">Total Features Analyzed</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="stat-val" id="verdict">SAFE</div>
+          <div class="stat-label">Verdict</div>
+        </div>
+      </div>
+
+      <!-- Feature Breakdown -->
+      <div class="features-card">
+        <h3>Feature Analysis Breakdown</h3>
+        <p class="card-desc">18 URL features extracted and evaluated by the Random Forest model</p>
+        <div id="featureList" class="feature-list"></div>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <section class="info-section" id="infoSection">
+      <h3>How It Works</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon">🔍</div>
+          <h4>Feature Extraction</h4>
+          <p>18 URL features are extracted: IP detection, HTTPS status, domain length, suspicious keywords, entropy, punycode, and more.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🤖</div>
+          <h4>ML Classification</h4>
+          <p>A Random Forest classifier trained on phishing and legitimate URL patterns evaluates the extracted features.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📊</div>
+          <h4>Risk Scoring</h4>
+          <p>The model outputs a probability score (0-100%) with a full breakdown of which features triggered the detection.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>PhishGuard — AI Phishing URL Detector · Built with Python, scikit-learn & Flask</p>
+      <p class="footer-note">⚠️ This tool is for educational and research purposes. Always verify URLs through multiple security tools.</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
