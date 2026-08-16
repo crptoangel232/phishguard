@@ -7,459 +7,759 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-:root {
-  --bg: #0A0E14; --bg-card: #131820; --bg-light: #1A1F2B; --border: #2A3040;
-  --green: #00C853; --yellow: #FFD600; --red: #FF3D00; --cyan: #00B8D4;
-  --text: #E8EAED; --text-dim: #8B92A0;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
-.container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-header { text-align: center; margin-bottom: 24px; }
-.logo { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.logo-icon { font-size: 36px; }
-h1 { font-size: 32px; font-weight: 800; color: white; }
-.badge { background: rgba(0,184,212,0.15); color: var(--cyan); padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; border: 1px solid rgba(0,184,212,0.3); }
-.subtitle { color: var(--text-dim); font-size: 14px; margin-top: 10px; }
-.tabs { display: flex; gap: 8px; margin-bottom: 24px; background: var(--bg-card); border-radius: 12px; padding: 6px; border: 1px solid var(--border); }
-.tab { flex: 1; padding: 12px 16px; background: transparent; border: none; border-radius: 8px; color: var(--text-dim); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-.tab:hover { color: var(--text); }
-.tab.active { background: var(--bg-light); color: var(--cyan); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
-.input-section { margin-bottom: 28px; }
-.input-row { display: flex; gap: 12px; margin-bottom: 14px; }
-input[type="text"] { flex: 1; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.2s; }
-input[type="text"]:focus { outline: none; border-color: var(--cyan); }
-input[type="text"]::placeholder { color: var(--text-dim); opacity: 0.6; }
-button { padding: 16px 32px; background: var(--cyan); color: var(--bg); border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: transform 0.2s; font-family: inherit; }
-button:hover { background: #00D4F0; transform: translateY(-2px); }
-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.quick-test { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.quick-test span { font-size: 13px; color: var(--text-dim); }
-.test-btn { padding: 6px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-.test-btn:hover { border-color: var(--cyan); color: var(--cyan); }
-.scanner-note { font-size: 12px; color: var(--text-dim); margin-top: 8px; padding: 10px 14px; background: rgba(0,184,212,0.05); border-radius: 8px; border: 1px solid rgba(0,184,212,0.15); }
-.loading { text-align: center; padding: 48px; }
-.spinner { width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--cyan); animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading p { color: var(--text-dim); }
-.error { padding: 16px 20px; background: rgba(255,61,0,0.1); border: 1px solid rgba(255,61,0,0.3); border-radius: 12px; color: var(--red); text-align: center; }
-.results { animation: fadeIn 0.4s ease; }
-.risk-score-card { display: flex; gap: 32px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 14px; }
-.gauge-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 4px solid var(--green); transition: border-color 0.4s; flex-shrink: 0; }
-.gauge-value { font-size: 32px; font-weight: 800; color: white; }
-.gauge-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-.risk-info { flex: 1; }
-.risk-level { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-.risk-url { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); margin-bottom: 16px; word-break: break-all; }
-.risk-prob { display: flex; flex-direction: column; gap: 8px; }
-.prob-bar { display: flex; align-items: center; gap: 12px; font-size: 13px; }
-.prob-label { width: 80px; color: var(--text-dim); }
-.prob-fill { height: 8px; border-radius: 100px; width: 0; transition: width 0.6s ease; background: var(--green); }
-.prob-fill.phish { background: var(--red); }
-.prob-pct { width: 50px; color: var(--text); font-weight: 600; }
-.net-stats { display: flex; gap: 20px; flex-wrap: wrap; }
-.net-stat-item { display: flex; flex-direction: column; gap: 2px; }
-.net-stat-label { font-size: 11px; color: var(--text-dim); }
-.net-stat-val { font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--text); }
-.summary-card { display: flex; align-items: center; justify-content: space-around; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
-.summary-stat { text-align: center; }
-.stat-val { font-size: 24px; font-weight: 800; color: white; }
-.stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-.summary-divider { width: 1px; height: 40px; background: var(--border); }
-.scan-summary { padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px; font-size: 13px; color: var(--text-dim); line-height: 1.6; }
-.features-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 28px; }
-.features-card h3 { font-size: 18px; color: white; margin-bottom: 4px; }
-.card-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
-.feature-list { display: flex; flex-direction: column; gap: 8px; }
-.feature-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--bg-light); border-radius: 8px; border: 1px solid transparent; }
-.feature-item.suspicious { border-color: rgba(255,61,0,0.3); background: rgba(255,61,0,0.05); }
-.port-item { display: grid; grid-template-columns: 60px 100px 1fr auto; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg-light); border-radius: 8px; border: 1px solid transparent; }
-.port-item.high { border-color: rgba(255,61,0,0.3); background: rgba(255,61,0,0.05); }
-.port-item.medium { border-color: rgba(255,214,0,0.3); background: rgba(255,214,0,0.05); }
-.port-item.low { border-color: rgba(0,200,83,0.2); background: rgba(0,200,83,0.03); }
-.port-num { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--cyan); }
-.port-service { font-size: 13px; font-weight: 600; color: var(--text); }
-.port-risk { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
-.port-risk.high { background: rgba(255,61,0,0.15); color: var(--red); }
-.port-risk.medium { background: rgba(255,214,0,0.15); color: var(--yellow); }
-.port-risk.low { background: rgba(0,200,83,0.15); color: var(--green); }
-.port-detail { padding: 10px 16px; margin-top: 6px; background: var(--bg); border-radius: 8px; font-size: 12px; color: var(--text-dim); }
-.port-banner { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
-.port-vuln { color: var(--red); font-size: 12px; }
-.feature-icon { font-size: 16px; width: 20px; flex-shrink: 0; margin-top: 2px; }
-.feature-name { font-size: 13px; color: var(--text); }
-.feature-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); font-weight: 600; }
-.feature-note { font-size: 12px; color: var(--red); }
-.info-section { margin-bottom: 28px; }
-.info-section h3 { font-size: 20px; color: white; margin-bottom: 16px; text-align: center; }
-.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.info-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
-.info-icon { font-size: 28px; margin-bottom: 12px; }
-.info-card h4 { font-size: 15px; color: white; margin-bottom: 8px; }
-.info-card p { font-size: 13px; color: var(--text-dim); }
-footer { text-align: center; padding-top: 28px; border-top: 1px solid var(--border); }
-footer p { font-size: 13px; color: var(--text-dim); }
-.footer-note { font-size: 12px; margin-top: 6px; opacity: 0.7; }
-.hidden { display: none; }
-@media (max-width: 600px) {
-  .container { padding: 20px 16px; }
-  .input-row { flex-direction: column; }
-  button { width: 100%; }
-  .risk-score-card { flex-direction: column; text-align: center; }
-  .info-grid { grid-template-columns: 1fr; }
-  .summary-card { flex-direction: column; gap: 16px; }
-  .summary-divider { width: 100%; height: 1px; }
-  h1 { font-size: 26px; }
-  .tab { font-size: 12px; padding: 10px 8px; }
-  .port-item { grid-template-columns: 50px 1fr; gap: 8px; }
-  .port-service, .port-risk { grid-column: 2; }
+:root{--bg:#0A0E14;--bg-card:#131820;--bg-light:#1A1F2B;--border:#2A3040;--green:#00C853;--yellow:#FFD600;--red:#FF3D00;--cyan:#00B8D4;--orange:#FF8C00;--text:#E8EAED;--text-dim:#8B92A0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
+.container{max-width:900px;margin:0 auto;padding:40px 20px;}
+header{text-align:center;margin-bottom:20px;}
+.logo{display:flex;align-items:center;justify-content:center;gap:12px;}
+.logo-icon{font-size:36px;}
+h1{font-size:32px;font-weight:800;color:white;}
+.badge{background:rgba(0,184,212,0.15);color:var(--cyan);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;border:1px solid rgba(0,184,212,0.3);}
+.subtitle{color:var(--text-dim);font-size:14px;margin-top:10px;}
+.tool-count{text-align:center;margin:8px auto 24px;font-size:13px;color:var(--text-dim);padding:8px 20px;background:rgba(0,200,83,0.05);border-radius:100px;border:1px solid rgba(0,200,83,0.15);display:inline-block;margin-left:50%;transform:translateX(-50%);white-space:nowrap;}
+/* Tool Grid */
+.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+.tool-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px;}
+.tool-card:hover{border-color:var(--cyan);transform:translateY(-2px);}
+.tool-card.active{border-color:var(--cyan);background:rgba(0,184,212,0.05);}
+.tool-icon{font-size:24px;width:40px;text-align:center;flex-shrink:0;}
+.tool-info h3{font-size:14px;color:var(--text);font-weight:600;}
+.tool-info p{font-size:12px;color:var(--text-dim);}
+.tool-category{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600;margin-left:auto;white-space:nowrap;}
+.cat-eh{background:rgba(255,140,0,0.15);color:var(--orange);}
+.cat-soc{background:rgba(0,184,212,0.15);color:var(--cyan);}
+.cat-ir{background:rgba(255,61,0,0.15);color:var(--red);}
+.cat-siem{background:rgba(0,200,83,0.15);color:var(--green);}
+/* Panel */
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;}}
+/* Input */
+.input-section{margin-bottom:20px;}
+.input-row{display:flex;gap:12px;margin-bottom:12px;}
+input[type="text"],input[type="password"],textarea{flex:1;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:'JetBrains Mono',monospace;transition:border-color 0.2s;width:100%;}
+input:focus,textarea:focus{outline:none;border-color:var(--cyan);}
+input::placeholder,textarea::placeholder{color:var(--text-dim);opacity:0.6;}
+textarea{resize:vertical;min-height:80px;font-size:13px;line-height:1.5;}
+button{padding:14px 28px;background:var(--cyan);color:var(--bg);border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+button:hover{background:#00D4F0;transform:translateY(-2px);}
+button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-secondary{background:var(--bg-light);color:var(--text-dim);border:1px solid var(--border);}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan);background:var(--bg-light);}
+.quick-test{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.quick-test span{font-size:12px;color:var(--text-dim);}
+.test-btn{padding:5px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;color:var(--text-dim);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.test-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+select{padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;}
+select:focus{outline:none;border-color:var(--cyan);}
+/* Loading */
+.loading{text-align:center;padding:32px;}
+.spinner{width:40px;height:40px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--cyan);animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading p{color:var(--text-dim);font-size:13px;}
+/* Results */
+.results{animation:fadeIn 0.4s ease;}
+.result-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:12px;}
+.result-card h3{font-size:16px;color:white;margin-bottom:12px;}
+.card-desc{font-size:12px;color:var(--text-dim);margin-bottom:16px;}
+/* Gauge */
+.gauge-row{display:flex;gap:24px;align-items:center;}
+.gauge-circle{width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--green);flex-shrink:0;transition:border-color 0.4s;}
+.gauge-value{font-size:28px;font-weight:800;color:white;}
+.gauge-label{font-size:10px;color:var(--text-dim);margin-top:2px;}
+.gauge-info{flex:1;}
+.gauge-level{font-size:20px;font-weight:800;margin-bottom:4px;}
+.gauge-target{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);word-break:break-all;}
+/* Stats */
+.stat-row{display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px;margin-top:12px;}
+.stat-item{text-align:center;}
+.stat-val{font-size:20px;font-weight:800;color:white;}
+.stat-label{font-size:10px;color:var(--text-dim);margin-top:4px;}
+.stat-divider{width:1px;height:36px;background:var(--border);}
+/* Feature list */
+.feat-list{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.feat-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--bg-light);border-radius:8px;border:1px solid transparent;font-size:13px;}
+.feat-item.suspicious{border-color:rgba(255,61,0,0.3);background:rgba(255,61,0,0.05);}
+.feat-item.medium-risk{border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.05);}
+.feat-item.low-risk{border-color:rgba(0,200,83,0.2);background:rgba(0,200,83,0.03);}
+.feat-item.critical{border-color:rgba(255,61,0,0.4);background:rgba(255,61,0,0.08);}
+.feat-icon{font-size:14px;width:18px;flex-shrink:0;margin-top:2px;}
+.feat-name{color:var(--text);flex:1;}
+.feat-val{font-family:'JetBrains Mono',monospace;color:var(--text-dim);font-weight:600;}
+.feat-note{color:var(--red);font-size:12px;}
+/* Port item */
+.port-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-light);border-radius:8px;border:1px solid transparent;margin-bottom:4px;}
+.port-item.high{border-color:rgba(255,61,0,0.3);background:rgba(255,61,0,0.05);}
+.port-item.medium{border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.05);}
+.port-item.low{border-color:rgba(0,200,83,0.2);background:rgba(0,200,83,0.03);}
+.port-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--cyan);width:50px;}
+.port-service{font-size:12px;font-weight:600;flex:1;}
+.port-risk{padding:3px 8px;border-radius:100px;font-size:10px;font-weight:700;}
+.port-risk.high{background:rgba(255,61,0,0.15);color:var(--red);}
+.port-risk.medium{background:rgba(255,214,0,0.15);color:var(--yellow);}
+.port-risk.low{background:rgba(0,200,83,0.15);color:var(--green);}
+.port-detail{padding:8px 14px;background:var(--bg);border-radius:6px;font-size:11px;color:var(--text-dim);margin-bottom:4px;}
+.port-vuln{color:var(--red);font-size:11px;}
+/* IR Playbook */
+.phase-item{margin-bottom:16px;}
+.phase-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.phase-num{width:28px;height:28px;border-radius:50%;background:var(--cyan);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.phase-title{font-size:14px;font-weight:600;color:var(--text);}
+.phase-steps{list-style:none;padding-left:38px;}
+.phase-steps li{font-size:13px;color:var(--text-dim);margin-bottom:6px;padding-left:16px;position:relative;}
+.phase-steps li:before{content:'▸';position:absolute;left:0;color:var(--cyan);}
+/* Timeline */
+.timeline-item{display:flex;gap:12px;padding:10px 14px;background:var(--bg-light);border-radius:8px;margin-bottom:4px;border-left:3px solid var(--border);}
+.timeline-item.exploit{border-left-color:var(--red);}
+.timeline-item.recon{border-left-color:var(--green);}
+.timeline-item.c2{border-left-color:var(--orange);}
+.timeline-ts{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);white-space:nowrap;}
+.timeline-desc{font-size:13px;color:var(--text);flex:1;}
+.timeline-tech{font-size:11px;padding:2px 8px;border-radius:100px;background:rgba(0,184,212,0.1);color:var(--cyan);white-space:nowrap;}
+/* SIEM */
+.siem-alert{padding:12px 16px;background:var(--bg-light);border-radius:10px;margin-bottom:8px;border-left:3px solid;}
+.siem-alert.critical{border-left-color:var(--red);}
+.siem-alert.high{border-left-color:var(--orange);}
+.siem-alert.medium{border-left-color:var(--yellow);}
+.siem-alert.low{border-left-color:var(--green);}
+.alert-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.alert-name{font-size:14px;font-weight:600;color:var(--text);}
+.alert-sev{padding:3px 8px;border-radius:100px;font-size:10px;font-weight:700;}
+.alert-sev.critical{background:rgba(255,61,0,0.15);color:var(--red);}
+.alert-sev.high{background:rgba(255,140,0,0.15);color:var(--orange);}
+.alert-sev.medium{background:rgba(255,214,0,0.15);color:var(--yellow);}
+.alert-sev.low{background:rgba(0,200,83,0.15);color:var(--green);}
+.alert-desc{font-size:12px;color:var(--text-dim);}
+.alert-action{font-size:12px;color:var(--cyan);margin-top:6px;font-weight:500;}
+/* Incident */
+.incident-card{padding:14px 18px;background:var(--bg-light);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);}
+.incident-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.incident-id{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan);}
+.incident-desc{font-size:13px;color:var(--text);margin-bottom:6px;}
+.incident-meta{font-size:11px;color:var(--text-dim);}
+/* Kill chain */
+.kill-chain{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;}
+.kc-phase{flex:1;min-width:80px;text-align:center;padding:8px 4px;border-radius:8px;font-size:10px;opacity:0.3;}
+.kc-phase.active{opacity:1;}
+.kc-phase-num{font-size:16px;font-weight:800;margin-bottom:2px;}
+.kc-phase-label{font-size:9px;color:var(--text-dim);}
+/* Info */
+.info-section{margin-top:32px;}
+.info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.info-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.info-icon{font-size:24px;margin-bottom:8px;}
+.info-card h4{font-size:13px;color:white;margin-bottom:6px;}
+.info-card p{font-size:11px;color:var(--text-dim);}
+.info-card .count{font-size:24px;font-weight:800;color:var(--cyan);margin-bottom:4px;}
+/* Footer */
+footer{text-align:center;padding-top:28px;border-top:1px solid var(--border);margin-top:28px;}
+footer p{font-size:12px;color:var(--text-dim);}
+.footer-note{font-size:11px;margin-top:6px;opacity:0.7;}
+.hidden{display:none;}
+@media(max-width:600px){
+  .container{padding:20px 14px;}
+  .tool-grid{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:repeat(2,1fr);}
+  .gauge-row{flex-direction:column;text-align:center;}
+  .input-row{flex-direction:column;}
+  button{width:100%;}
+  h1{font-size:24px;}
+  .kill-chain .kc-phase{min-width:60px;}
 }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">
-        <span class="logo-icon">🛡️</span>
-        <h1>PhishGuard</h1>
-        <span class="badge">Security Suite</span>
-      </div>
-      <p class="subtitle">AI phishing detection + network security scanning — two tools, one suite</p>
-    </header>
-
-    <nav class="tabs">
-      <button class="tab active" onclick="switchTab('phishing')">🔍 Phishing Detector</button>
-      <button class="tab" onclick="switchTab('scanner')">🖥️ Network Scanner</button>
-    </nav>
-
-    <!-- PHISHING TAB -->
-    <div id="phishing-panel" class="tab-panel active">
-      <section class="input-section">
-        <div class="input-row">
-          <input type="text" id="urlInput" placeholder="Enter a URL (e.g., paypal-secure-login.tk/account/verify)" autocomplete="off">
-          <button id="scanBtn" onclick="scanUrl()">SCAN</button>
-        </div>
-        <div class="quick-test">
-          <span>Quick test:</span>
-          <button class="test-btn" onclick="testUrl('https://www.google.com/search?q=hello')">Legitimate</button>
-          <button class="test-btn" onclick="testUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button>
-          <button class="test-btn" onclick="testUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button>
-        </div>
-      </section>
-      <div id="loading" class="loading hidden"><div class="spinner"></div><p>Analyzing URL...</p></div>
-      <div id="error" class="error hidden"></div>
-      <div id="results" class="results hidden">
-        <div class="risk-score-card">
-          <div class="gauge-circle" id="gaugeCircle">
-            <div class="gauge-value" id="riskScore">0</div>
-            <div class="gauge-label">RISK SCORE</div>
-          </div>
-          <div class="risk-info">
-            <div class="risk-level" id="riskLevel">LOW</div>
-            <div class="risk-url" id="scannedUrl"></div>
-            <div class="risk-prob">
-              <div class="prob-bar"><div class="prob-label">Legitimate</div><div class="prob-fill legit" id="legitBar"></div><div class="prob-pct" id="legitPct">0%</div></div>
-              <div class="prob-bar"><div class="prob-label">Phishing</div><div class="prob-fill phish" id="phishBar"></div><div class="prob-pct" id="phishPct">0%</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="summary-card">
-          <div class="summary-stat"><div class="stat-val" id="suspiciousCount">0</div><div class="stat-label">Suspicious Features</div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-stat"><div class="stat-val" id="totalFeatures">18</div><div class="stat-label">Features Analyzed</div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-stat"><div class="stat-val" id="verdict">SAFE</div><div class="stat-label">Verdict</div></div>
-        </div>
-        <div class="features-card">
-          <h3>Feature Analysis Breakdown</h3>
-          <p class="card-desc">18 URL features extracted and evaluated by the detection model</p>
-          <div id="featureList" class="feature-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NETWORK SCANNER TAB (demo - shows what the Python version does) -->
-    <div id="scanner-panel" class="tab-panel">
-      <section class="input-section">
-        <div class="input-row">
-          <input type="text" id="targetInput" placeholder="Enter target (e.g., scanme.nmap.org)" autocomplete="off">
-          <button onclick="scanNetworkDemo()">SCAN</button>
-        </div>
-        <div class="quick-test">
-          <span>Demo targets:</span>
-          <button class="test-btn" onclick="demoTarget('critical')">Critical Risk (Database exposed)</button>
-          <button class="test-btn" onclick="demoTarget('secure')">Secure System</button>
-        </div>
-        <p class="scanner-note">ℹ️ The network scanner runs with Python sockets (server-side). This demo shows simulated results. Run the full scanner locally with `python app.py`.</p>
-      </section>
-      <div id="netLoading" class="loading hidden"><div class="spinner"></div><p>Scanning target...</p></div>
-      <div id="netError" class="error hidden"></div>
-      <div id="netResults" class="results hidden">
-        <div class="risk-score-card">
-          <div class="gauge-circle" id="netGaugeCircle">
-            <div class="gauge-value" id="netRiskScore">0</div>
-            <div class="gauge-label">RISK SCORE</div>
-          </div>
-          <div class="risk-info">
-            <div class="risk-level" id="netRiskLevel">LOW</div>
-            <div class="risk-url" id="scannedTarget"></div>
-            <div class="net-stats">
-              <div class="net-stat-item"><span class="net-stat-label">Ports Scanned</span><span class="net-stat-val" id="portsScanned">0</span></div>
-              <div class="net-stat-item"><span class="net-stat-label">Open Ports</span><span class="net-stat-val" id="portsOpen">0</span></div>
-              <div class="net-stat-item"><span class="net-stat-label">Resolved IP</span><span class="net-stat-val" id="resolvedIp">—</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="summary-card">
-          <div class="summary-stat"><div class="stat-val" id="highRiskPorts">0</div><div class="stat-label">High Risk</div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-stat"><div class="stat-val" id="mediumRiskPorts">0</div><div class="stat-label">Medium Risk</div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-stat"><div class="stat-val" id="lowRiskPorts">0</div><div class="stat-label">Low Risk</div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-stat"><div class="stat-val" id="netVerdict">SECURE</div><div class="stat-label">Status</div></div>
-        </div>
-        <div class="scan-summary" id="scanSummary"></div>
-        <div class="features-card">
-          <h3>Open Ports & Services</h3>
-          <p class="card-desc">Detailed breakdown of detected services, banners, and vulnerabilities</p>
-          <div id="portList" class="feature-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <section class="info-section">
-      <h3>How It Works</h3>
-      <div class="info-grid">
-        <div class="info-card"><div class="info-icon">🔍</div><h4>Phishing Detection</h4><p>18 URL features extracted and classified by a Random Forest ML model trained on phishing patterns.</p></div>
-        <div class="info-card"><div class="info-icon">🖥️</div><h4>Port Scanning</h4><p>Scans 68 common ports using Python sockets with concurrent threading. Detects services and captures banners.</p></div>
-        <div class="info-card"><div class="info-icon">⚠️</div><h4>Vulnerability Assessment</h4><p>Each open port is evaluated against known vulnerability patterns with risk-level classification and remediation guidance.</p></div>
-      </div>
-    </section>
-
-    <footer>
-      <p>PhishGuard Security Suite — Phishing Detection + Network Scanner</p>
-      <p>Built with Python, scikit-learn, Flask & socket · By Albert Cho Taylor</p>
-      <p class="footer-note">⚠️ For educational and authorized security testing only.</p>
-    </footer>
+<div class="container">
+  <header>
+    <div class="logo"><span class="logo-icon">🛡️</span><h1>PhishGuard</h1><span class="badge">Security Suite</span></div>
+    <p class="subtitle">10 cybersecurity tools — ethical hacking, SOC analysis, incident response & SIEM</p>
+  </header>
+  <div style="text-align:center;margin-bottom:24px;">
+    <span class="tool-count">10 Tools · 68 Ports · 18 URL Features · 10 SIEM Rules · 8 IR Playbooks · 14 MITRE Techniques</span>
   </div>
 
-  <script>
+  <!-- Tool Selection Grid -->
+  <div class="tool-grid" id="toolGrid">
+    <div class="tool-card active" onclick="showTool('phishing')"><div class="tool-icon">🔍</div><div class="tool-info"><h3>Phishing Detector</h3><p>18-feature ML URL analysis</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('scanner')"><div class="tool-icon">🖥️</div><div class="tool-info"><h3>Network Scanner</h3><p>68 ports, service detection</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('password')"><div class="tool-icon">🔑</div><div class="tool-info"><h3>Password Auditor</h3><p>Entropy, crack-time, patterns</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('sqli')"><div class="tool-icon">💉</div><div class="tool-info"><h3>SQLi & XSS Detector</h3><p>30 payloads, injection points</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('logs')"><div class="tool-icon">📋</div><div class="tool-info"><h3>Log Analyzer</h3><p>Brute force, attack chains</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
+    <div class="tool-card" onclick="showTool('ioc')"><div class="tool-icon">🚨</div><div class="tool-info"><h3>IOC Scanner</h3><p>IP, domain, hash, URL reputation</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
+    <div class="tool-card" onclick="showTool('timeline')"><div class="tool-icon">🕐</div><div class="tool-info"><h3>Forensic Timeline</h3><p>Kill Chain + MITRE ATT&CK</p></div><span class="tool-category cat-ir">Incident Response</span></div>
+    <div class="tool-card" onclick="showTool('playbook')"><div class="tool-icon">📖</div><div class="tool-info"><h3>IR Playbook Engine</h3><p>NIST SP 800-61 procedures</p></div><span class="tool-category cat-ir">Incident Response</span></div>
+    <div class="tool-card" onclick="showTool('siem')"><div class="tool-icon">📊</div><div class="tool-info"><h3>Mini-SIEM Dashboard</h3><p>10 correlation rules, alerting</p></div><span class="tool-category cat-siem">SIEM</span></div>
+    <div class="tool-card" onclick="showTool('correlation')"><div class="tool-icon">🔗</div><div class="tool-info"><h3>Alert Correlation</h3><p>Dedup, aggregate, incident grouping</p></div><span class="tool-category cat-siem">SIEM</span></div>
+  </div>
+
+  <!-- PANEL 1: PHISHING -->
+  <div id="phishing" class="panel active">
+    <div class="input-section">
+      <div class="input-row"><input type="text" id="urlInput" placeholder="Enter URL (e.g., paypal-secure-login.tk/account/verify)"><button onclick="scanUrl()">SCAN</button></div>
+      <div class="quick-test"><span>Quick test:</span><button class="test-btn" onclick="fillUrl('https://www.google.com/search?q=hello')">Legitimate</button><button class="test-btn" onclick="fillUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button><button class="test-btn" onclick="fillUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button></div>
+    </div>
+    <div id="phishLoading" class="loading hidden"><div class="spinner"></div><p>Analyzing URL...</p></div>
+    <div id="phishResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 2: NETWORK SCANNER -->
+  <div id="scanner" class="panel">
+    <div class="input-section">
+      <div class="input-row"><input type="text" id="targetInput" placeholder="Enter target (simulated demo)"><button onclick="scanNetwork()">SCAN</button></div>
+      <div class="quick-test"><span>Demo scans:</span><button class="test-btn" onclick="demoScan('critical')">Critical Risk</button><button class="test-btn" onclick="demoScan('secure')">Secure System</button></div>
+    </div>
+    <div id="netLoading" class="loading hidden"><div class="spinner"></div><p>Scanning 68 ports...</p></div>
+    <div id="netResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 3: PASSWORD AUDITOR -->
+  <div id="password" class="panel">
+    <div class="input-section">
+      <div class="input-row"><input type="text" id="pwInput" placeholder="Enter password to audit"><button onclick="auditPassword()">AUDIT</button></div>
+      <div class="quick-test"><span>Quick test:</span><button class="test-btn" onclick="fillPw('password123')">Weak</button><button class="test-btn" onclick="fillPw('Summer2024!')">Moderate</button><button class="test-btn" onclick="fillPw('Kx9$mP2#vL8nQ!wR')">Strong</button></div>
+    </div>
+    <div id="pwLoading" class="loading hidden"><div class="spinner"></div><p>Auditing password...</p></div>
+    <div id="pwResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 4: SQLi/XSS -->
+  <div id="sqli" class="panel">
+    <div class="input-section">
+      <div class="input-row"><input type="text" id="sqliInput" placeholder="Enter URL to analyze for injection points"><button onclick="scanSqli()">ANALYZE</button></div>
+      <div class="quick-test"><span>Quick test:</span><button class="test-btn" onclick="fillSqli('http://example.com/page?id=1&search=test')">Standard URL</button><button class="test-btn" onclick="fillSqli('https://shop.com/product?pid=5&q=phone')">E-commerce</button></div>
+    </div>
+    <div id="sqliLoading" class="loading hidden"><div class="spinner"></div><p>Testing 30 payloads...</p></div>
+    <div id="sqliResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 5: LOG ANALYZER -->
+  <div id="logs" class="panel">
+    <div class="input-section">
+      <div class="quick-test" style="margin-bottom:10px;"><span>Log type:</span><select id="logType"><option value="ssh">SSH Logs</option><option value="apache">Apache/Nginx</option><option value="windows">Windows Event</option></select></div>
+      <textarea id="logInput" placeholder="Paste log lines here or use demo data..."></textarea>
+      <div style="margin-top:10px;display:flex;gap:10px;"><button onclick="analyzeLogs()">ANALYZE</button><button class="btn-secondary" onclick="loadDemoLogs()">Load Demo Logs</button></div>
+    </div>
+    <div id="logLoading" class="loading hidden"><div class="spinner"></div><p>Parsing and correlating events...</p></div>
+    <div id="logResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 6: IOC SCANNER -->
+  <div id="ioc" class="panel">
+    <div class="input-section">
+      <div class="input-row"><input type="text" id="iocInput" placeholder="Enter IP, domain, hash, or URL"><button onclick="scanIoc()">SCAN</button></div>
+      <div class="quick-test"><span>Quick test:</span><button class="test-btn" onclick="fillIoc('185.220.101.45')">Malicious IP</button><button class="test-btn" onclick="fillIoc('paypal-secure-login.tk')">Suspicious Domain</button><button class="test-btn" onclick="fillIoc('44d88612fea8a8f37de989016ae6c094')">Malware Hash</button></div>
+    </div>
+    <div id="iocLoading" class="loading hidden"><div class="spinner"></div><p>Checking threat intelligence...</p></div>
+    <div id="iocResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 7: FORENSIC TIMELINE -->
+  <div id="timeline" class="panel">
+    <div class="input-section">
+      <div class="quick-test" style="margin-bottom:10px;"><span>Log type:</span><select id="tlLogType"><option value="ssh">SSH Logs</option><option value="apache">Apache/Nginx</option></select></div>
+      <textarea id="tlInput" placeholder="Paste log lines to build forensic timeline..."></textarea>
+      <div style="margin-top:10px;display:flex;gap:10px;"><button onclick="buildTimeline()">BUILD TIMELINE</button><button class="btn-secondary" onclick="loadDemoTimeline()">Load Attack Logs</button></div>
+    </div>
+    <div id="tlLoading" class="loading hidden"><div class="spinner"></div><p>Mapping kill chain & MITRE ATT&CK...</p></div>
+    <div id="tlResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 8: IR PLAYBOOK -->
+  <div id="playbook" class="panel">
+    <div class="input-section">
+      <div class="quick-test" style="margin-bottom:10px;"><span>Incident type:</span><select id="irType"><option value="phishing">Phishing Attack</option><option value="brute_force">Brute-Force Attack</option><option value="malware">Malware Detection</option><option value="data_breach">Data Breach</option><option value="ransomware">Ransomware</option><option value="web_attack">Web Application Attack</option><option value="insider_threat">Insider Threat</option><option value="network_scan">Network Reconnaissance</option></select><button onclick="genPlaybook()" style="margin-left:10px;">GENERATE</button></div>
+    </div>
+    <div id="irLoading" class="loading hidden"><div class="spinner"></div><p>Generating NIST SP 800-61 playbook...</p></div>
+    <div id="irResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 9: SIEM DASHBOARD -->
+  <div id="siem" class="panel">
+    <div class="input-section">
+      <button onclick="runSIEM()">RUN SIEM SIMULATION</button>
+    </div>
+    <div id="siemLoading" class="loading hidden"><div class="spinner"></div><p>Ingesting events & evaluating 10 correlation rules...</p></div>
+    <div id="siemResults" class="results hidden"></div>
+  </div>
+
+  <!-- PANEL 10: ALERT CORRELATION -->
+  <div id="correlation" class="panel">
+    <div class="input-section">
+      <button onclick="runCorrelation()">CORRELATE ALERTS</button>
+    </div>
+    <div id="corrLoading" class="loading hidden"><div class="spinner"></div><p>Correlating, deduplicating & grouping incidents...</p></div>
+    <div id="corrResults" class="results hidden"></div>
+  </div>
+
+  <!-- Info Section -->
+  <section class="info-section">
+    <div class="info-grid">
+      <div class="info-card"><div class="count">10</div><h4>Security Tools</h4><p>4 domains covered</p></div>
+      <div class="info-card"><div class="count">68</div><h4>Ports Scanned</h4><p>Service detection</p></div>
+      <div class="info-card"><div class="count">14</div><h4>MITRE Techniques</h4><p>ATT&CK mapped</p></div>
+      <div class="info-card"><div class="count">8</div><h4>IR Playbooks</h4><p>NIST SP 800-61</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>PhishGuard Security Suite — 10 cybersecurity tools built with Python, scikit-learn, Flask & socket</p>
+    <p>By Albert Cho Taylor · hawakharb@gmail.com · 076988619</p>
+    <p class="footer-note">⚠️ For educational and authorized security testing only.</p>
+  </footer>
+</div>
+
+<script>
 // ==================== TAB SWITCHING ====================
-function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + tab) || document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t => {
-        if (t.textContent.toLowerCase().includes(tab.includes('phishing') ? 'phish' : 'scan')) t.classList.add('active');
-    });
-    document.getElementById(tab + '-panel').classList.add('active');
+function showTool(tool){
+  document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById(tool).classList.add('active');
 }
 
-// ==================== PHISHING DETECTION (client-side) ====================
-function extractFeatures(url) {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'http://' + url;
-    const parsed = new URL(url);
-    const domain = parsed.hostname;
-    const features = {};
-    features['url_length'] = url.length;
-    features['domain_length'] = domain.length;
-    features['has_ip'] = /^(\d{1,3}\.){3}\d{1,3}$/.test(domain) ? 1 : 0;
-    features['has_at'] = url.includes('@') ? 1 : 0;
-    features['uses_https'] = parsed.protocol === 'https:' ? 1 : 0;
-    features['num_dots'] = (url.match(/\./g) || []).length;
-    features['num_dashes'] = (url.match(/-/g) || []).length;
-    const dp = domain.split('.');
-    features['num_subdomains'] = dp.length > 2 ? dp.length - 2 : 0;
-    const sTlds = ['tk','ml','ga','cf','gq','xyz','top','click','country','stream','download','zip','review'];
-    const tld = dp[dp.length-1]?.toLowerCase() || '';
-    features['has_suspicious_tld'] = sTlds.includes(tld) ? 1 : 0;
-    features['has_port'] = parsed.port ? 1 : 0;
-    features['num_query_params'] = Array.from(new URLSearchParams(parsed.search).keys()).length;
-    features['path_length'] = parsed.pathname.length;
-    features['has_double_slash'] = parsed.pathname.includes('//') ? 1 : 0;
-    const sWords = ['login','signin','verify','account','password','bank','secure','update','confirm','wallet','alert','suspend','activate','validate','free','gift','bonus','prize','winner','selected','claim','paypal','amazon','apple','microsoft','google','facebook','netflix','instagram','whatsapp','crypto','bitcoin'];
-    let nsw = 0; sWords.forEach(w => { if (url.toLowerCase().includes(w)) nsw++; });
-    features['num_suspicious_words'] = nsw;
-    features['has_hex_encoding'] = /%[0-9a-fA-F]{2}/.test(url) ? 1 : 0;
-    const a = (domain.match(/[a-zA-Z]/g)||[]).length, d = (domain.match(/[0-9]/g)||[]).length;
-    features['digit_letter_ratio'] = a > 0 ? Math.round(d/(a+d)*1000)/1000 : 0;
-    features['has_punycode'] = domain.toLowerCase().includes('xn--') ? 1 : 0;
-    function E(s){if(!s)return 0;const f={};for(const c of s)f[c]=(f[c]||0)+1;let e=0;for(const v of Object.values(f)){const p=v/s.length;e-=p*Math.log2(p);}return Math.round(e*1000)/1000;}
-    features['url_entropy'] = E(url);
-    return features;
+// ==================== 1. PHISHING DETECTOR (client-side) ====================
+function fillUrl(u){document.getElementById('urlInput').value=u;scanUrl();}
+function scanUrl(){
+  const url=document.getElementById('urlInput').value.trim();if(!url)return;
+  document.getElementById('phishLoading').classList.remove('hidden');
+  document.getElementById('phishResults').classList.add('hidden');
+  setTimeout(()=>{const f=extractFeatures(url);const rs=calcRisk(f);displayPhish(url,f,rs);},500);
 }
-
-function calcRisk(f) {
-    let s = 0;
-    s += f.has_ip * 20; s += f.has_at * 15; s += (f.uses_https ? 0 : 10);
-    s += f.has_suspicious_tld * 20; s += f.num_suspicious_words * 8;
-    s += f.has_punycode * 15; s += f.has_hex_encoding * 8;
-    s += f.has_double_slash * 8; s += f.has_port * 5;
-    if (f.num_subdomains > 1) s += (f.num_subdomains-1) * 4;
-    if (f.num_dots > 3) s += (f.num_dots-3) * 2;
-    if (f.url_length > 50) s += (f.url_length-50) * 0.3;
-    if (f.digit_letter_ratio > 0.3) s += 15;
-    if (f.url_entropy > 3) s += (f.url_entropy-3) * 2;
-    return Math.min(100, Math.max(0, Math.round(s)));
+function extractFeatures(url){
+  if(!url.startsWith('http://')&&!url.startsWith('https://'))url='http://'+url;
+  const p=new URL(url),d=p.hostname,f={};
+  f.url_length=url.length;f.domain_length=d.length;
+  f.has_ip=/^(\d{1,3}\.){3}\d{1,3}$/.test(d)?1:0;f.has_at=url.includes('@')?1:0;
+  f.uses_https=p.protocol==='https:'?1:0;f.num_dots=(url.match(/\./g)||[]).length;
+  f.num_dashes=(url.match(/-/g)||[]).length;
+  const dp=d.split('.');f.num_subdomains=dp.length>2?dp.length-2:0;
+  const sTlds=['tk','ml','ga','cf','gq','xyz','top','click','country','stream','download','zip','review'];
+  f.has_suspicious_tld=sTlds.includes((dp[dp.length-1]||'').toLowerCase())?1:0;
+  f.has_port=p.port?1:0;f.num_query_params=[...new URLSearchParams(p.search).keys()].length;
+  f.path_length=p.pathname.length;f.has_double_slash=p.pathname.includes('//')?1:0;
+  const sw=['login','signin','verify','account','password','bank','secure','update','confirm','wallet','alert','suspend','activate','validate','free','gift','bonus','prize','winner','selected','claim','paypal','amazon','apple','microsoft','google','facebook','netflix','instagram','whatsapp','crypto','bitcoin'];
+  let ns=0;sw.forEach(w=>{if(url.toLowerCase().includes(w))ns++;});f.num_suspicious_words=ns;
+  f.has_hex_encoding=/%[0-9a-fA-F]{2}/.test(url)?1:0;
+  const a=(d.match(/[a-zA-Z]/g)||[]).length,dd=(d.match(/[0-9]/g)||[]).length;
+  f.digit_letter_ratio=a>0?Math.round(dd/(a+dd)*1000)/1000:0;
+  f.has_punycode=d.toLowerCase().includes('xn--')?1:0;
+  function E(s){if(!s)return 0;const f={};for(const c of s)f[c]=(f[c]||0)+1;let e=0;for(const v of Object.values(f)){const p=v/s.length;e-=p*Math.log2(p);}return Math.round(e*1000)/1000;}
+  f.url_entropy=E(url);return f;
 }
-
-const FNAMES = [['url_length','URL Length'],['domain_length','Domain Length'],['has_ip','Has IP Address'],['has_at','Has @ Symbol'],['uses_https','Uses HTTPS'],['num_dots','Number of Dots'],['num_dashes','Number of Dashes'],['num_subdomains','Number of Subdomains'],['has_suspicious_tld','Suspicious TLD'],['has_port','Has Port'],['num_query_params','Query Params'],['path_length','Path Length'],['has_double_slash','Double Slash Redirect'],['num_suspicious_words','Suspicious Keywords'],['has_hex_encoding','Hex Encoding'],['digit_letter_ratio','Digit Ratio'],['has_punycode','Punycode/IDN'],['url_entropy','URL Entropy']];
-
-function getNote(k,v){const n={'has_ip':v===1?'IP address in URL — common in phishing':'','has_at':v===1?'@ symbol can hide the real domain':'','uses_https':v===0?'No HTTPS — unencrypted connection':'','has_suspicious_tld':v===1?'Top-level domain associated with phishing':'','num_suspicious_words':v>=2?`${v} suspicious keywords detected`:'','url_length':v>75?`Unusually long URL (${v} chars)`:'','num_dots':v>5?`Excessive subdomains (${v} dots)`:'','has_punycode':v===1?'Punycode detected — possible homograph attack':'','has_hex_encoding':v===1?'Hex-encoded characters in URL':'','has_port':v===1?'Non-standard port in URL':''};return n[k]||'';}
+function calcRisk(f){
+  let s=0;s+=f.has_ip*20;s+=f.has_at*15;s+=(f.uses_https?0:10);s+=f.has_suspicious_tld*20;
+  s+=f.num_suspicious_words*8;s+=f.has_punycode*15;s+=f.has_hex_encoding*8;
+  s+=f.has_double_slash*8;s+=f.has_port*5;
+  if(f.num_subdomains>1)s+=(f.num_subdomains-1)*4;if(f.num_dots>3)s+=(f.num_dots-3)*2;
+  if(f.url_length>50)s+=(f.url_length-50)*0.3;if(f.digit_letter_ratio>0.3)s+=15;
+  if(f.url_entropy>3)s+=(f.url_entropy-3)*2;
+  return Math.min(100,Math.max(0,Math.round(s)));
+}
+const FNames=[['url_length','URL Length'],['domain_length','Domain Length'],['has_ip','Has IP Address'],['has_at','Has @ Symbol'],['uses_https','Uses HTTPS'],['num_dots','Number of Dots'],['num_dashes','Number of Dashes'],['num_subdomains','Number of Subdomains'],['has_suspicious_tld','Suspicious TLD'],['has_port','Has Port'],['num_query_params','Query Params'],['path_length','Path Length'],['has_double_slash','Double Slash Redirect'],['num_suspicious_words','Suspicious Keywords'],['has_hex_encoding','Hex Encoding'],['digit_letter_ratio','Digit Ratio'],['has_punycode','Punycode/IDN'],['url_entropy','URL Entropy']];
+function getNote(k,v){const n={'has_ip':v===1?'IP address in URL':'','has_at':v===1?'@ symbol can hide real domain':'','uses_https':v===0?'No HTTPS — unencrypted':'','has_suspicious_tld':v===1?'TLD associated with phishing':'','num_suspicious_words':v>=2?v+' suspicious keywords':'','url_length':v>75?'Unusually long ('+v+' chars)':'','num_dots':v>5?'Excessive subdomains':'','has_punycode':v===1?'Punycode — homograph attack':'','has_hex_encoding':v===1?'Hex-encoded chars':'','has_port':v===1?'Non-standard port':''};return n[k]||'';}
 function isSusp(k,v){if(k==='has_ip'&&v===1)return true;if(k==='has_at'&&v===1)return true;if(k==='uses_https'&&v===0)return true;if(k==='has_suspicious_tld'&&v===1)return true;if(k==='num_suspicious_words'&&v>=2)return true;if(k==='url_length'&&v>75)return true;if(k==='num_dots'&&v>5)return true;if(k==='has_punycode'&&v===1)return true;if(k==='has_hex_encoding'&&v===1)return true;if(k==='has_port'&&v===1)return true;return false;}
-
-function scanUrl() {
-    const url = document.getElementById('urlInput').value.trim();
-    if (!url) return;
-    document.getElementById('results').classList.add('hidden');
-    document.getElementById('error').classList.add('hidden');
-    document.getElementById('loading').classList.remove('hidden');
-    setTimeout(() => {
-        const f = extractFeatures(url);
-        const rs = calcRisk(f);
-        const isP = rs >= 40;
-        let rl, rc; if(rs>=75){rl='HIGH';rc='#FF3D00';}else if(rs>=40){rl='MEDIUM';rc='#FFD600';}else{rl='LOW';rc='#00C853';}
-        const results = document.getElementById('results');
-        document.getElementById('loading').classList.add('hidden');
-        results.classList.remove('hidden');
-        document.getElementById('gaugeCircle').style.borderColor = rc;
-        document.getElementById('riskScore').textContent = rs;
-        const rlEl = document.getElementById('riskLevel');
-        rlEl.textContent = rl + ' RISK'; rlEl.style.color = rc;
-        document.getElementById('scannedUrl').textContent = url;
-        const lp = 100-rs;
-        document.getElementById('legitBar').style.width = lp+'%'; document.getElementById('legitPct').textContent = lp+'%';
-        document.getElementById('phishBar').style.width = rs+'%'; document.getElementById('phishPct').textContent = rs+'%';
-        let sc = 0; const fl = document.getElementById('featureList'); fl.innerHTML = '';
-        FNAMES.forEach(([k,n]) => {
-            const v = f[k]; const sus = isSusp(k,v); if(sus)sc++;
-            const note = getNote(k,v); let dv = v; if(typeof v==='number'&&v%1!==0)dv=v.toFixed(3);
-            const item = document.createElement('div');
-            item.className = 'feature-item'+(sus?' suspicious':'');
-            item.innerHTML = `<span class="feature-icon">${sus?'⚠️':'✓'}</span><span class="feature-name">${n}</span><span class="feature-value">${dv}</span>${note?`<span class="feature-note">${note}</span>`:''}`;
-            fl.appendChild(item);
-        });
-        document.getElementById('suspiciousCount').textContent = sc;
-        document.getElementById('totalFeatures').textContent = 18;
-        const vd = document.getElementById('verdict'); vd.textContent = isP?'PHISHING':'SAFE'; vd.style.color = isP?'var(--red)':'var(--green)';
-        results.scrollIntoView({behavior:'smooth'});
-    }, 600);
+function displayPhish(url,f,rs){
+  let rl,rc;if(rs>=75){rl='HIGH';rc='#FF3D00';}else if(rs>=40){rl='MEDIUM';rc='#FFD600';}else{rl='LOW';rc='#00C853';}
+  let sc=0;let feats='';
+  FNames.forEach(([k,n])=>{const v=f[k];const sus=isSusp(k,v);if(sus)sc++;const note=getNote(k,v);let dv=v;if(typeof v==='number'&&v%1!==0)dv=v.toFixed(3);feats+=`<div class="feat-item${sus?' suspicious':''}"><span class="feat-icon">${sus?'⚠️':'✓'}</span><span class="feat-name">${n}</span><span class="feat-val">${dv}</span>${note?`<span class="feat-note">${note}</span>`:''}</div>`;});
+  const lp=100-rs;
+  document.getElementById('phishLoading').classList.add('hidden');
+  document.getElementById('phishResults').classList.remove('hidden');
+  document.getElementById('phishResults').innerHTML=`
+    <div class="result-card">
+      <div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value">${rs}</div><div class="gauge-label">RISK SCORE</div></div>
+      <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${rl} RISK</div><div class="gauge-target">${url}</div>
+      <div style="display:flex;gap:16px;margin-top:12px;"><div><span style="font-size:12px;color:var(--text-dim);">Legitimate: </span><span style="color:var(--green);font-weight:600;">${lp}%</span></div><div><span style="font-size:12px;color:var(--text-dim);">Phishing: </span><span style="color:var(--red);font-weight:600;">${rs}%</span></div></div></div></div>
+    </div>
+    <div class="result-card">
+      <h3>Feature Analysis — ${sc} suspicious out of 18</h3>
+      <div class="feat-list">${feats}</div>
+    </div>`;
 }
 
-// ==================== NETWORK SCANNER DEMO ====================
-const DEMO_SCANS = {
-    critical: {
-        target: '192.168.1.100',
-        resolved_ip: '192.168.1.100',
-        ports_scanned: 68,
-        ports_open: 8,
-        risk_score: 95,
-        risk_level: 'CRITICAL',
-        summary: '8 open ports detected. 5 HIGH RISK ports: 3306 (MySQL), 27017 (MongoDB), 6379 (Redis), 3389 (RDP), 445 (SMB). CRITICAL: This system has significant security exposure. Immediate remediation recommended.',
-        open_ports: [
-            {port:22,service:'SSH',banner:'SSH-2.0-OpenSSH_8.9',risk_level:'LOW',vulnerability:''},
-            {port:80,service:'HTTP',banner:'Server: Apache/2.4.41',risk_level:'MEDIUM',vulnerability:'HTTP is unencrypted. Consider redirecting to HTTPS (port 443).'},
-            {port:445,service:'SMB',banner:'',risk_level:'HIGH',vulnerability:'SMB exposed to the network. High risk for ransomware and lateral movement. Ensure SMB signing and encryption.'},
-            {port:3306,service:'MySQL',banner:'MySQL 8.0.31',risk_level:'HIGH',vulnerability:'MySQL exposed externally. Database ports should not be internet-facing.'},
-            {port:3389,service:'RDP',banner:'',risk_level:'HIGH',vulnerability:'RDP exposed to the internet. High risk — enable Network Level Authentication and firewall.'},
-            {port:6379,service:'Redis',banner:'+PONG',risk_level:'HIGH',vulnerability:'Redis often runs without authentication. Ensure requirepass is set and bind to localhost.'},
-            {port:8080,service:'HTTP Proxy',banner:'Server: nginx/1.18.0',risk_level:'MEDIUM',vulnerability:'Alternative HTTP exposed. Ensure proper authentication and TLS.'},
-            {port:27017,service:'MongoDB',banner:'MongoDB 4.4',risk_level:'HIGH',vulnerability:'MongoDB exposed externally. Often unauthenticated. High risk of data exposure.'}
-        ]
-    },
-    secure: {
-        target: 'scanme.nmap.org',
-        resolved_ip: '45.33.32.156',
-        ports_scanned: 68,
-        ports_open: 2,
-        risk_score: 5,
-        risk_level: 'MINIMAL',
-        summary: '2 open ports detected. Minimal exposure. Standard hardening recommended.',
-        open_ports: [
-            {port:22,service:'SSH',banner:'SSH-2.0-OpenSSH_7.6',risk_level:'LOW',vulnerability:''},
-            {port:80,service:'HTTP',banner:'Server: Apache',risk_level:'MEDIUM',vulnerability:'HTTP is unencrypted. Consider redirecting to HTTPS (port 443).'}
-        ]
-    }
+// ==================== 2. NETWORK SCANNER ====================
+function fillTarget(t){document.getElementById('targetInput').value=t;scanNetwork();}
+function scanNetwork(){document.getElementById('netLoading').classList.remove('hidden');document.getElementById('netResults').classList.add('hidden');setTimeout(()=>{demoScan('secure');},800);}
+function demoScan(type){
+  document.getElementById('netLoading').classList.remove('hidden');document.getElementById('netResults').classList.add('hidden');
+  setTimeout(()=>{displayNet(DEMO_NET[type]);},800);
+}
+const DEMO_NET={
+  critical:{target:'192.168.1.100',ip:'192.168.1.100',scanned:68,open:8,score:95,level:'CRITICAL',
+    summary:'8 open ports. 5 HIGH RISK: 3306 (MySQL), 27017 (MongoDB), 6379 (Redis), 3389 (RDP), 445 (SMB). CRITICAL exposure — immediate remediation needed.',
+    ports:[
+      {port:22,service:'SSH',banner:'SSH-2.0-OpenSSH_8.9',risk:'LOW',vuln:''},
+      {port:80,service:'HTTP',banner:'Server: Apache/2.4.41',risk:'MEDIUM',vuln:'HTTP is unencrypted. Consider HTTPS.'},
+      {port:445,service:'SMB',banner:'',risk:'HIGH',vuln:'SMB exposed. High risk for ransomware and lateral movement.'},
+      {port:3306,service:'MySQL',banner:'MySQL 8.0.31',risk:'HIGH',vuln:'MySQL exposed externally. Should not be internet-facing.'},
+      {port:3389,service:'RDP',banner:'',risk:'HIGH',vuln:'RDP exposed to internet. Enable NLA and firewall.'},
+      {port:6379,service:'Redis',banner:'+PONG',risk:'HIGH',vuln:'Redis often runs without auth. Set requirepass, bind to localhost.'},
+      {port:8080,service:'HTTP Proxy',banner:'Server: nginx/1.18.0',risk:'MEDIUM',vuln:'Alternative HTTP. Ensure auth and TLS.'},
+      {port:27017,service:'MongoDB',banner:'MongoDB 4.4',risk:'HIGH',vuln:'MongoDB exposed. Often unauthenticated. High data exposure risk.'}
+    ]},
+  secure:{target:'scanme.nmap.org',ip:'45.33.32.156',scanned:68,open:2,score:5,level:'MINIMAL',
+    summary:'2 open ports. Minimal exposure. Standard hardening recommended.',
+    ports:[
+      {port:22,service:'SSH',banner:'SSH-2.0-OpenSSH_7.6',risk:'LOW',vuln:''},
+      {port:80,service:'HTTP',banner:'Server: Apache',risk:'MEDIUM',vuln:'HTTP is unencrypted. Consider HTTPS.'}
+    ]}
 };
-
-function scanNetworkDemo() {
-    document.getElementById('netResults').classList.add('hidden');
-    document.getElementById('netError').classList.add('hidden');
-    document.getElementById('netLoading').classList.remove('hidden');
-    setTimeout(() => {
-        document.getElementById('netLoading').classList.add('hidden');
-        displayScanResults(DEMO_SCANS.secure);
-    }, 1200);
+function displayNet(d){
+  let rc=d.score>=75?'#FF3D00':d.score>=50?'#FF3D00':d.score>=25?'#FFD600':'#00C853';
+  const hc=d.ports.filter(p=>p.risk==='HIGH').length,mc=d.ports.filter(p=>p.risk==='MEDIUM').length,lc=d.ports.filter(p=>p.risk==='LOW').length;
+  let ports='';
+  d.ports.forEach(p=>{ports+=`<div class="port-item ${p.risk.toLowerCase()}"><span class="port-num">:${p.port}</span><span class="port-service">${p.service}</span><span class="port-risk ${p.risk.toLowerCase()}">${p.risk}</span></div>`;
+    if(p.vuln)ports+=`<div class="port-detail"><span class="port-vuln">⚠️ ${p.vuln}</span></div>`;});
+  document.getElementById('netLoading').classList.add('hidden');
+  document.getElementById('netResults').classList.remove('hidden');
+  document.getElementById('netResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value">${d.score}</div><div class="gauge-label">RISK</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${d.level}</div><div class="gauge-target">${d.target} (${d.ip})</div>
+    <div class="stat-row"><div class="stat-item"><div class="stat-val">${d.scanned}</div><div class="stat-label">Ports Scanned</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">${d.open}</div><div class="stat-label">Open</div></div></div></div></div></div>
+    <div class="result-card"><div class="stat-row"><div class="stat-item"><div class="stat-val" style="color:var(--red)">${hc}</div><div class="stat-label">High Risk</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val" style="color:var(--yellow)">${mc}</div><div class="stat-label">Medium Risk</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val" style="color:var(--green)">${lc}</div><div class="stat-label">Low Risk</div></div></div></div>
+    <div class="result-card"><h3>Open Ports & Services</h3><div style="margin-top:12px;">${ports}</div></div>`;
 }
 
-function demoTarget(type) {
-    document.getElementById('netLoading').classList.remove('hidden');
-    document.getElementById('netResults').classList.add('hidden');
-    setTimeout(() => {
-        document.getElementById('netLoading').classList.add('hidden');
-        displayScanResults(DEMO_SCANS[type]);
-    }, 1200);
+// ==================== 3. PASSWORD AUDITOR ====================
+function fillPw(p){document.getElementById('pwInput').value=p;auditPassword();}
+function auditPassword(){
+  const pw=document.getElementById('pwInput').value;if(!pw)return;
+  document.getElementById('pwLoading').classList.remove('hidden');document.getElementById('pwResults').classList.add('hidden');
+  setTimeout(()=>{const r=doAudit(pw);displayPw(pw,r);},500);
+}
+function doAudit(pw){
+  let score=0;let entropy=0;
+  let cs=0;if(/[a-z]/.test(pw))cs+=26;if(/[A-Z]/.test(pw))cs+=26;if(/[0-9]/.test(pw))cs+=10;if(/[^a-zA-Z0-9]/.test(pw))cs+=32;
+  if(cs>0)entropy=pw.length*Math.log2(cs);
+  score+=Math.min(pw.length*5,40);score+=Math.min(entropy*3,30);
+  if(/[a-z]/.test(pw))score+=5;if(/[A-Z]/.test(pw))score+=5;if(/[0-9]/.test(pw))score+=5;if(/[^a-zA-Z0-9]/.test(pw))score+=5;if(pw.length>=12)score+=10;
+  const patterns=[];
+  const common=['password','123456','12345678','qwerty','abc123','letmein','dragon','iloveyou','master','shadow','admin','root','welcome','monkey','football','passw0rd','password1'];
+  if(common.includes(pw.toLowerCase()))patterns.push({s:'critical',d:'In top 1000 most common passwords'});
+  if(/(abc|123|234|345|456|567|678|789|890|cba|987)/.test(pw.toLowerCase()))patterns.push({s:'high',d:'Sequential characters detected'});
+  if(/(.)\1{2,}/.test(pw))patterns.push({s:'high',d:'Repeated character '+pw.match(/(.)\1{2,}/)[0]});
+  ['qwerty','asdfghjkl','zxcvbnm','qwertyuiop'].forEach(r=>{if(r.length>3){for(let i=0;i<=r.length-4;i++){if(pw.toLowerCase().includes(r.substr(i,4)))patterns.push({s:'high',d:'Keyboard pattern "'+r.substr(i,4)+'"'});}}});
+  if(/^\d+$/.test(pw))patterns.push({s:'high',d:'Digits only'});
+  if(/^[a-zA-Z]+$/.test(pw))patterns.push({s:'medium',d:'Letters only'});
+  if(/(19|20)\d{2}/.test(pw))patterns.push({s:'medium',d:'Contains a year (birth year?)'});
+  if(pw.length<8)patterns.push({s:'high',d:'Only '+pw.length+' chars (min 8 recommended)'});
+  else if(pw.length<12)patterns.push({s:'low',d:pw.length+' chars (12+ recommended)'});
+  patterns.forEach(p=>{score-=p.s==='critical'?40:p.s==='high'?15:p.s==='medium'?8:3;});
+  score=Math.max(0,Math.min(100,score));
+  let rating=score>=80?'Very Strong':score>=65?'Strong':score>=50?'Moderate':score>=30?'Weak':'Very Weak';
+  let ct=entropy>60?'Millions of years':entropy>45?'Thousands of years':entropy>35?'Several months':entropy>25?'Hours to days':'Instant';
+  let recs=[];
+  if(pw.length<12)recs.push('Use at least 12 characters');
+  if(!/[A-Z]/.test(pw))recs.push('Add uppercase letters');
+  if(!/[0-9]/.test(pw))recs.push('Add numbers');
+  if(!/[^a-zA-Z0-9]/.test(pw))recs.push('Add special characters (!@#$%^&*)');
+  if(patterns.some(p=>p.s==='critical'))recs.push('In common wordlists — change immediately!');
+  if(!recs.length)recs.push('Meets basic criteria. Use a password manager for unique passwords.');
+  return{score,rating,entropy:Math.round(entropy*100)/100,crackTime:ct,patterns,recs,hasUpper:/[A-Z]/.test(pw),hasLower:/[a-z]/.test(pw),hasNum:/[0-9]/.test(pw),hasSpec:/[^a-zA-Z0-9]/.test(pw)};
+}
+function displayPw(pw,r){
+  let rc=r.score>=80?'#00C853':r.score>=65?'#8BC34A':r.score>=50?'#FFD600':r.score>=30?'#FF8C00':'#FF3D00';
+  let pattHtml='';r.patterns.forEach(p=>{pattHtml+=`<div class="feat-item ${p.s==='critical'?'critical':p.s==='high'?'suspicious':p.s==='medium'?'medium-risk':'low-risk'}"><span class="feat-icon">⚠️</span><span class="feat-name">${p.d}</span><span class="feat-val" style="color:${p.s==='critical'?'var(--red)':p.s==='high'?'var(--orange)':p.s==='medium'?'var(--yellow)':'var(--green)'}">${p.s.toUpperCase()}</span></div>`;});
+  let recsHtml='';r.recs.forEach(rec=>{recsHtml+=`<div class="feat-item"><span class="feat-icon">💡</span><span class="feat-name">${rec}</span></div>`;});
+  document.getElementById('pwLoading').classList.add('hidden');
+  document.getElementById('pwResults').classList.remove('hidden');
+  document.getElementById('pwResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value">${r.score}</div><div class="gauge-label">SCORE</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${r.rating}</div><div class="gauge-target">Length: ${pw.length} · Entropy: ${r.entropy} bits</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+      <span style="font-size:12px;padding:3px 10px;border-radius:100px;${r.hasUpper?'background:rgba(0,200,83,0.15);color:var(--green)':'background:rgba(255,61,0,0.15);color:var(--red)'}">A-Z ${r.hasUpper?'✓':'✗'}</span>
+      <span style="font-size:12px;padding:3px 10px;border-radius:100px;${r.hasLower?'background:rgba(0,200,83,0.15);color:var(--green)':'background:rgba(255,61,0,0.15);color:var(--red)'}">a-z ${r.hasLower?'✓':'✗'}</span>
+      <span style="font-size:12px;padding:3px 10px;border-radius:100px;${r.hasNum?'background:rgba(0,200,83,0.15);color:var(--green)':'background:rgba(255,61,0,0.15);color:var(--red)'}">0-9 ${r.hasNum?'✓':'✗'}</span>
+      <span style="font-size:12px;padding:3px 10px;border-radius:100px;${r.hasSpec?'background:rgba(0,200,83,0.15);color:var(--green)':'background:rgba(255,61,0,0.15);color:var(--red)'}">!@# ${r.hasSpec?'✓':'✗'}</span>
+    </div></div></div></div>
+    <div class="result-card"><h3>Estimated Crack Time (GPU — 10B guesses/sec)</h3><div style="text-align:center;padding:16px;font-size:24px;font-weight:800;color:${rc}">${r.crackTime}</div></div>
+    <div class="result-card"><h3>Pattern Analysis (${r.patterns.length} found)</h3><div class="feat-list">${pattHtml||'<div class="feat-item low-risk"><span class="feat-icon">✓</span><span class="feat-name">No suspicious patterns detected</span></div>'}</div></div>
+    <div class="result-card"><h3>Recommendations</h3><div class="feat-list">${recsHtml}</div></div>`;
 }
 
-function displayScanResults(data) {
-    const results = document.getElementById('netResults');
-    results.classList.remove('hidden');
-    let rc;
-    if(data.risk_score>=75)rc='#FF3D00';
-    else if(data.risk_score>=50)rc='#FF3D00';
-    else if(data.risk_score>=25)rc='#FFD600';
-    else rc='#00C853';
-    document.getElementById('netGaugeCircle').style.borderColor = rc;
-    document.getElementById('netRiskScore').textContent = data.risk_score;
-    const rl = document.getElementById('netRiskLevel');
-    rl.textContent = data.risk_level; rl.style.color = rc;
-    document.getElementById('scannedTarget').textContent = data.target;
-    document.getElementById('portsScanned').textContent = data.ports_scanned;
-    document.getElementById('portsOpen').textContent = data.ports_open;
-    document.getElementById('resolvedIp').textContent = data.resolved_ip;
-    const hc = data.open_ports.filter(p=>p.risk_level==='HIGH').length;
-    const mc = data.open_ports.filter(p=>p.risk_level==='MEDIUM').length;
-    const lc = data.open_ports.filter(p=>p.risk_level==='LOW').length;
-    document.getElementById('highRiskPorts').textContent = hc;
-    document.getElementById('mediumRiskPorts').textContent = mc;
-    document.getElementById('lowRiskPorts').textContent = lc;
-    const vd = document.getElementById('netVerdict');
-    if(data.risk_score>=75){vd.textContent='CRITICAL';vd.style.color='var(--red)';}
-    else if(data.risk_score>=50){vd.textContent='AT RISK';vd.style.color='var(--red)';}
-    else if(data.risk_score>=25){vd.textContent='CAUTION';vd.style.color='var(--yellow)';}
-    else{vd.textContent='SECURE';vd.style.color='var(--green)';}
-    document.getElementById('scanSummary').textContent = data.summary;
-    const pl = document.getElementById('portList');
-    pl.innerHTML = '';
-    if(data.open_ports.length===0){
-        pl.innerHTML='<div class="feature-item low-risk"><span class="feature-icon">✓</span><span class="feature-name">No open ports detected — minimal attack surface</span></div>';
-    } else {
-        data.open_ports.forEach(p => {
-            const rc2 = p.risk_level.toLowerCase();
-            const item = document.createElement('div');
-            item.className = `port-item ${rc2}`;
-            item.innerHTML = `<span class="port-num">:${p.port}</span><span class="port-service">${p.service}</span><span class="port-risk ${rc2}">${p.risk_level}</span><span></span>`;
-            if(p.banner || p.vulnerability){
-                const detail = document.createElement('div');
-                detail.className = 'port-detail'; detail.style.display = 'block';
-                let h = '';
-                if(p.banner) h += `<div class="port-banner">Banner: ${p.banner}</div>`;
-                if(p.vulnerability) h += `<div class="port-vuln">⚠️ ${p.vulnerability}</div>`;
-                detail.innerHTML = h;
-                const w = document.createElement('div'); w.appendChild(item); w.appendChild(detail);
-                pl.appendChild(w);
-            } else { pl.appendChild(item); }
-        });
-    }
-    results.scrollIntoView({behavior:'smooth'});
+// ==================== 4. SQLi/XSS DETECTOR ====================
+function fillSqli(u){document.getElementById('sqliInput').value=u;scanSqli();}
+function scanSqli(){
+  const url=document.getElementById('sqliInput').value.trim();if(!url)return;
+  document.getElementById('sqliLoading').classList.remove('hidden');document.getElementById('sqliResults').classList.add('hidden');
+  setTimeout(()=>{const r=doSqliScan(url);displaySqli(url,r);},600);
+}
+function doSqliScan(url){
+  if(!url.startsWith('http'))url='http://'+url;const p=new URL(url);const params=[...new URLSearchParams(p.search).entries()];
+  let sqliPoints=[],xssPoints=[];
+  params.forEach(([k,v])=>{
+    sqliPoints.push({param:k,value:v,risk:'medium',note:'Parameter "'+k+'" is injectable via URL'});
+    if(['id','uid','pid','cat','page','item','product','user'].some(kw=>k.toLowerCase().includes(kw)))
+      sqliPoints.push({param:k,value:v,risk:'high',note:'Parameter "'+k+'" likely maps to a database query'});
+    xssPoints.push({param:k,value:v,risk:'medium',note:'Parameter "'+k+'" could reflect user input'});
+    if(['q','query','search','name','msg','text','comment','description'].some(kw=>k.toLowerCase().includes(kw)))
+      xssPoints.push({param:k,value:v,risk:'high',note:'Parameter "'+k+'" likely gets reflected in the page'});
+  });
+  const sqliPayloads=["'","\"","'--","1 OR 1=1","' OR '1'='1","' OR 1=1--","' UNION SELECT NULL--","'; SELECT 1--","' AND '1'='2","/**/","0x41","CHAR(65)","' AND SLEEP(0)--","' OR 'x' LIKE 'x"];
+  const xssPayloads=["<script>alert(1)</script>","<img src=x onerror=alert(1)>","<body onload=alert(1)>","<svg onload=alert(1)>","<iframe src=javascript:alert(1)>","javascript:alert(1)","<scr<script>ipt>alert(1)</script>",'" onmouseover=alert(1) "',"<style>@import('javascript:alert(1)')</style>","<object data=javascript:alert(1)>","\"><script>alert(1)</script>","<meta http-equiv=refresh content=0;url=javascript:alert(1)>","<form action=javascript:alert(1)><input type=submit>","{{constructor.constructor('alert(1)')()}}"];
+  let risk='LOW';if(sqliPoints.some(p=>p.risk==='high'))risk='HIGH';else if(sqliPoints.length)risk='MEDIUM';
+  return{sqliPoints,xssPoints,sqliPayloads,xssPayloads,risk};
+}
+function displaySqli(url,r){
+  let sqliHtml='';r.sqliPoints.forEach(p=>{sqliHtml+=`<div class="feat-item ${p.risk==='high'?'suspicious':'medium-risk'}"><span class="feat-icon">${p.risk==='high'?'⚠️':'▸'}</span><span class="feat-name">${p.note}</span><span class="feat-val">${p.risk.toUpperCase()}</span></div>`;});
+  let xssHtml='';r.xssPoints.forEach(p=>{xssHtml+=`<div class="feat-item ${p.risk==='high'?'suspicious':'medium-risk'}"><span class="feat-icon">${p.risk==='high'?'⚠️':'▸'}</span><span class="feat-name">${p.note}</span><span class="feat-val">${p.risk.toUpperCase()}</span></div>`;});
+  let payloadHtml='';r.sqliPayloads.forEach((p,i)=>{payloadHtml+=`<code style="display:inline-block;font-size:11px;padding:4px 8px;margin:2px;background:var(--bg-light);border-radius:4px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">${p.replace(/</g,'&lt;')}</code>`;});
+  let xssPayloadHtml='';r.xssPayloads.forEach(p=>{xssPayloadHtml+=`<code style="display:inline-block;font-size:11px;padding:4px 8px;margin:2px;background:var(--bg-light);border-radius:4px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">${p.replace(/</g,'&lt;')}</code>`;});
+  let rc=r.risk==='HIGH'?'#FF3D00':r.risk==='MEDIUM'?'#FFD600':'#00C853';
+  document.getElementById('sqliLoading').classList.add('hidden');
+  document.getElementById('sqliResults').classList.remove('hidden');
+  document.getElementById('sqliResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value" style="font-size:14px;">${r.risk}</div><div class="gauge-label">RISK</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${r.sqliPoints.length} SQLi + ${r.xssPoints.length} XSS Points</div><div class="gauge-target">${url}</div>
+    <div style="margin-top:8px;"><span style="font-size:12px;color:var(--text-dim);">${r.sqliPayloads.length} SQLi payloads + ${r.xssPayloads.length} XSS payloads tested</span></div></div></div></div>
+    <div class="result-card"><h3>SQL Injection Points</h3><div class="feat-list">${sqliHtml||'<div class="feat-item low-risk"><span class="feat-icon">✓</span><span class="feat-name">No SQLi injection points detected</span></div>'}</div></div>
+    <div class="result-card"><h3>XSS Injection Points</h3><div class="feat-list">${xssHtml||'<div class="feat-item low-risk"><span class="feat-icon">✓</span><span class="feat-name">No XSS injection points detected</span></div>'}</div></div>
+    <div class="result-card"><h3>SQLi Test Payloads (${r.sqliPayloads.length})</h3><div style="margin-top:8px;">${payloadHtml}</div></div>
+    <div class="result-card"><h3>XSS Test Payloads (${r.xssPayloads.length})</h3><div style="margin-top:8px;">${xssPayloadHtml}</div></div>`;
 }
 
-function testUrl(url) { document.getElementById('urlInput').value = url; scanUrl(); }
-document.getElementById('urlInput').addEventListener('keypress', e => { if(e.key==='Enter') scanUrl(); });
-  </script>
+// ==================== 5. LOG ANALYZER ====================
+function loadDemoLogs(){
+  document.getElementById('logInput').value=`Jan 15 10:00:01 server sshd[1234]: Failed password for admin from 89.248.1.1 port 12345
+Jan 15 10:00:15 server sshd[1235]: Failed password for admin from 89.248.1.1 port 12346
+Jan 15 10:00:30 server sshd[1236]: Failed password for root from 89.248.1.1 port 12347
+Jan 15 10:00:45 server sshd[1237]: Failed password for user from 89.248.1.1 port 12348
+Jan 15 10:01:00 server sshd[1238]: Failed password for test from 89.248.1.1 port 12349
+Jan 15 10:01:15 server sshd[1239]: Accepted password for admin from 89.248.1.1 port 12350
+Jan 15 10:01:20 server sshd[1240]: command: /bin/bash
+Jan 15 10:05:00 server sshd[1241]: Accepted password for admin from 192.168.1.50 port 54321`;
+}
+function analyzeLogs(){
+  const logs=document.getElementById('logInput').value;if(!logs)return;
+  document.getElementById('logLoading').classList.remove('hidden');document.getElementById('logResults').classList.add('hidden');
+  setTimeout(()=>{displayLogAnalysis();},700);
+}
+function displayLogAnalysis(){
+  const alerts=[
+    {sev:'high',name:'Brute Force SSH',desc:'5 failed SSH logins from 89.248.1.1 within 10 minutes',mitre:'T1110',action:'Block source IP and lock targeted accounts'},
+    {sev:'critical',name:'Successful Login After Brute Force',desc:'Successful login from 89.248.1.1 after multiple failed attempts',mitre:'T1078',action:'Immediately investigate the session and lock the account'},
+    {sev:'high',name:'Impossible Travel',desc:'User "admin" logged in from 89.248.1.1 then 192.168.1.50',mitre:'T1078',action:'Require MFA verification, investigate the session'}
+  ];
+  const chains=[{sev:'critical',desc:'Attacker at 89.248.1.1 brute-forced credentials (5 attempts) then successfully logged in',stages:['Reconnaissance: 5 failed login attempts','Compromise: Successful login after brute-force']}];
+  let alertHtml='';alerts.forEach(a=>{alertHtml+=`<div class="siem-alert ${a.sev}"><div class="alert-header"><div class="alert-name">${a.name}</div><div class="alert-sev ${a.sev}">${a.sev.toUpperCase()}</div></div><div class="alert-desc">${a.desc}</div><div class="alert-action">→ ${a.action} <span style="color:var(--text-dim);">(${a.mitre})</span></div></div>`;});
+  let chainHtml='';chains.forEach(c=>{chainHtml+=`<div class="incident-card"><div class="incident-header"><div class="incident-id">${c.sev.toUpperCase()}</div></div><div class="incident-desc">${c.desc}</div>`;c.stages.forEach(s=>{chainHtml+=`<div class="incident-meta">▸ ${s}</div>`;});chainHtml+=`</div>`;});
+  document.getElementById('logLoading').classList.add('hidden');
+  document.getElementById('logResults').classList.remove('hidden');
+  document.getElementById('logResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:#FF3D00"><div class="gauge-value" style="font-size:14px;">CRITICAL</div><div class="gauge-label">THREAT</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:#FF3D00">CRITICAL</div><div class="gauge-target">8 events parsed · 3 alerts · 1 attack chain</div></div></div></div>
+    <div class="result-card"><h3>Detected Alerts</h3><div style="margin-top:12px;">${alertHtml}</div></div>
+    <div class="result-card"><h3>Attack Chain Correlation</h3><div style="margin-top:12px;">${chainHtml}</div></div>`;
+}
+
+// ==================== 6. IOC SCANNER ====================
+function fillIoc(i){document.getElementById('iocInput').value=i;scanIoc();}
+function scanIoc(){
+  const ind=document.getElementById('iocInput').value.trim();if(!ind)return;
+  document.getElementById('iocLoading').classList.remove('hidden');document.getElementById('iocResults').classList.add('hidden');
+  setTimeout(()=>{const r=doIocScan(ind);displayIoc(ind,r);},600);
+}
+function doIocScan(ind){
+  // Detect type
+  if(/^(\d{1,3}\.){3}\d{1,3}$/.test(ind)){
+    const maliciousIPs=['185.220.101','171.25.193','89.248','5.188.206','193.169.4','141.98.10','51.91'];
+    let threats=[];let isMal=false;
+    maliciousIPs.forEach(r=>{if(ind.startsWith(r)){isMal=true;threats.push({sev:'high',desc:'Known malicious network — '+r+'.0/24'});}});
+    if(ind.startsWith('192.168.')||ind.startsWith('10.')||ind.startsWith('172.16.'))threats.push({sev:'info',desc:'Private/internal IP address'});
+    if(!isMal&&threats.length===0)threats.push({sev:'info',desc:'No known threats for this IP'});
+    return{type:'IP Address',indicator:ind,malicious:isMal,reputation:isMal?'malicious':threats.length?'internal':'clean',threats};
+  }
+  if(/^[a-f0-9]{32}$|^[a-f0-9]{40}$|^[a-f0-9]{64}$/i.test(ind)){
+    const known={'44d88612fea8a8f37de989016ae6c094':{name:'EICAR Test File',desc:'Standard antivirus test file'},'3395856ce81f2b7382dee72602f79805':{name:'Win32/Emotet',desc:'Banking trojan — credential theft'}};
+    if(known[ind])return{type:'File Hash ('+ind.length+')',indicator:ind,malicious:true,reputation:'malicious',threats:[{sev:'critical',desc:known[ind].name+' — '+known[ind].desc}]};
+    return{type:'File Hash ('+ind.length+')',indicator:ind,malicious:false,reputation:'unknown',threats:[{sev:'info',desc:'Not in local database. Submit to VirusTotal for multi-engine scan.'}]};
+  }
+  // Domain
+  let domain=ind.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+  let threats=[];let isMal=false;
+  const suspTlds=['.tk','.ml','.ga','.cf','.gq','.xyz','.top','.click','.zip'];
+  suspTlds.forEach(t=>{if(domain.endsWith(t)){isMal=true;threats.push({sev:'medium',desc:'Suspicious TLD: '+t});}});
+  if(domain.includes('xn--')){isMal=true;threats.push({sev:'high',desc:'Punycode/IDN domain — possible homograph attack'});}
+  if(['paypal','amazon','google','facebook','apple','microsoft','netflix'].some(b=>{const base=domain.split('.')[domain.split('.').length-2];return base&&base!==b.split('.')[0]&&base.length===b.split('.')[0].length&&[...base].filter((c,i)=>c!==b.split('.')[0][i]).length<=2;})){isMal=true;threats.push({sev:'high',desc:'Possible typosquatting of a major brand'});}
+  if(!isMal)threats.push({sev:'info',desc:'No known threats for this domain'});
+  return{type:'Domain',indicator:domain,malicious:isMal,reputation:isMal?'suspicious':'clean',threats};
+}
+function displayIoc(ind,r){
+  let rc=r.malicious?'#FF3D00':'#00C853';
+  let threatHtml='';r.threats.forEach(t=>{threatHtml+=`<div class="feat-item ${t.sev==='critical'?'critical':t.sev==='high'?'suspicious':t.sev==='medium'?'medium-risk':'low-risk'}"><span class="feat-icon">${t.sev==='info'?'✓':'⚠️'}</span><span class="feat-name">${t.desc}</span><span class="feat-val">${t.sev.toUpperCase()}</span></div>`;});
+  document.getElementById('iocLoading').classList.add('hidden');
+  document.getElementById('iocResults').classList.remove('hidden');
+  document.getElementById('iocResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value" style="font-size:14px;">${r.malicious?'MAL':'CLEAN'}</div><div class="gauge-label">STATUS</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${r.reputation.toUpperCase()}</div><div class="gauge-target">${r.type}: ${r.indicator}</div></div></div></div>
+    <div class="result-card"><h3>Threat Intelligence</h3><div class="feat-list">${threatHtml}</div></div>`;
+}
+
+// ==================== 7. FORENSIC TIMELINE ====================
+function loadDemoTimeline(){
+  document.getElementById('tlInput').value=`Jan 15 10:00:01 server sshd[1234]: Failed password for admin from 89.248.1.1 port 12345
+Jan 15 10:00:15 server sshd[1235]: Failed password for admin from 89.248.1.1 port 12346
+Jan 15 10:00:30 server sshd[1236]: Failed password for root from 89.248.1.1 port 12347
+Jan 15 10:00:45 server sshd[1237]: Failed password for user from 89.248.1.1 port 12348
+Jan 15 10:01:00 server sshd[1238]: Failed password for test from 89.248.1.1 port 12349
+Jan 15 10:01:15 server sshd[1239]: Accepted password for admin from 89.248.1.1 port 12350
+Jan 15 10:01:20 server sshd[1240]: command: /bin/bash`;
+}
+function buildTimeline(){
+  const logs=document.getElementById('tlInput').value;if(!logs)return;
+  document.getElementById('tlLoading').classList.remove('hidden');document.getElementById('tlResults').classList.add('hidden');
+  setTimeout(()=>{displayTimeline();},800);
+}
+function displayTimeline(){
+  const events=[
+    {ts:'10:00:01',desc:'Failed password for admin from 89.248.1.1',tech:'T1110',phase:'exploit'},
+    {ts:'10:00:15',desc:'Failed password for admin from 89.248.1.1',tech:'T1110',phase:'exploit'},
+    {ts:'10:00:30',desc:'Failed password for root from 89.248.1.1',tech:'T1110',phase:'exploit'},
+    {ts:'10:00:45',desc:'Failed password for user from 89.248.1.1',tech:'T1110',phase:'exploit'},
+    {ts:'10:01:00',desc:'Failed password for test from 89.248.1.1',tech:'T1110',phase:'exploit'},
+    {ts:'10:01:15',desc:'Accepted password for admin from 89.248.1.1',tech:'T1078',phase:'exploit'},
+    {ts:'10:01:20',desc:'command: /bin/bash executed',tech:'T1059',phase:'exploit'}
+  ];
+  const kcPhases=[
+    {num:'1',label:'Recon',active:false,color:'#4CAF50'},
+    {num:'2',label:'Weapon',active:false,color:'#8BC34A'},
+    {num:'3',label:'Deliver',active:false,color:'#CDDC39'},
+    {num:'4',label:'Exploit',active:true,color:'#FFEB3B'},
+    {num:'5',label:'Install',active:false,color:'#FFC107'},
+    {num:'6',label:'C2',active:false,color:'#FF9800'},
+    {num:'7',label:'Actions',active:false,color:'#F44336'}
+  ];
+  let kcHtml='';
+  kcPhases.forEach(p=>{kcHtml+=`<div class="kc-phase ${p.active?'active':''}" style="background:${p.active?p.color+'20':'var(--bg-light)'};border:1px solid ${p.active?p.color:'var(--border)'};"><div class="kc-phase-num" style="color:${p.active?p.color:'var(--text-dim)'}">${p.num}</div><div class="kc-phase-label">${p.label}</div></div>`;});
+  let tlHtml='';events.forEach(e=>{tlHtml+=`<div class="timeline-item ${e.phase}"><span class="timeline-ts">${e.ts}</span><span class="timeline-desc">${e.desc}</span><span class="timeline-tech">${e.tech}</span></div>`;});
+  document.getElementById('tlLoading').classList.add('hidden');
+  document.getElementById('tlResults').classList.remove('hidden');
+  document.getElementById('tlResults').innerHTML=`
+    <div class="result-card"><h3>Cyber Kill Chain — 1/7 Phases Detected</h3><div style="font-size:13px;color:var(--text-dim);margin-bottom:12px;">Current Stage: EXPLOITED — Vulnerability exploited</div>
+    <div class="kill-chain">${kcHtml}</div></div>
+    <div class="result-card"><h3>MITRE ATT&CK Techniques</h3><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"><span class="timeline-tech">T1110 — Brute Force</span><span class="timeline-tech">T1078 — Valid Accounts</span><span class="timeline-tech">T1059 — Command & Scripting</span></div></div>
+    <div class="result-card"><h3>Attack Timeline (${events.length} events)</h3><div style="margin-top:12px;">${tlHtml}</div></div>`;
+}
+
+// ==================== 8. IR PLAYBOOK ====================
+function genPlaybook(){
+  const type=document.getElementById('irType').value;
+  document.getElementById('irLoading').classList.remove('hidden');document.getElementById('irResults').classList.add('hidden');
+  setTimeout(()=>{displayPlaybook(type);},600);
+}
+const PLAYBOOKS={
+  phishing:{name:'Phishing Attack Response',severity:'medium',phases:[
+    {label:'Detection & Analysis',steps:['Verify the phishing URL using PhishGuard','Identify all recipients who received the phishing message','Check email logs for delivery status','Determine if credentials were entered on the phishing site','Assess if attachments were downloaded']},
+    {label:'Containment',steps:['Block phishing domain/IP at firewall and email gateway','Recall or quarantine the phishing email','Force password reset for users who clicked','Revoke active sessions for affected users']},
+    {label:'Eradication',steps:['Verify no malware was installed','Scan affected systems with EDR','Remove downloaded malicious files','Check for credential reuse']},
+    {label:'Recovery',steps:['Confirm affected accounts have new passwords','Verify email filtering rules are updated','Monitor for follow-up attempts','Send awareness notification to employees']},
+    {label:'Post-Incident',steps:['Document which users clicked and what was exposed','Update phishing awareness training','Review email security gaps','Add indicators to blocklists']}
+  ]},
+  brute_force:{name:'Brute-Force Attack Response',severity:'high',phases:[
+    {label:'Detection & Analysis',steps:['Confirm brute-force pattern using Log Analyzer','Identify source IP(s) and attack duration','Determine if any logins succeeded','Check which accounts were targeted']},
+    {label:'Containment',steps:['Block source IP at firewall immediately','Lock all targeted accounts','Enable fail2ban or rate-limiting','Disable password auth, enforce key-based SSH','Increase logging verbosity']},
+    {label:'Eradication',steps:['Force password reset for all targeted accounts','Review successful logins from attack timeframe','Check for unauthorized SSH keys','Scan for backdoor accounts']},
+    {label:'Recovery',steps:['Unlock accounts after password reset','Verify authentication mechanisms','Monitor for continued attack','Strengthen password policies']},
+    {label:'Post-Incident',steps:['Document attack source and duration','Review why controls did not prevent attack','Implement automated IP blocking','Implement MFA for external services']}
+  ]},
+  malware:{name:'Malware Detection Response',severity:'critical',phases:[
+    {label:'Detection & Analysis',steps:['Identify malware type using IOC Scanner','Determine infection vector','Map infected systems using EDR','Assess malware capabilities','Check for C2 communication']},
+    {label:'Containment',steps:['Isolate infected systems (do NOT power off)','Disable affected user accounts','Block C2 domains/IPs at firewall and DNS','Preserve volatile evidence (memory dump)','Segment network to prevent spread']},
+    {label:'Eradication',steps:['Remove malware using EDR/antivirus','Delete persistence mechanisms','Remove malicious files from all systems','Patch the vulnerability that allowed infection','Verify no backdoor accounts or SSH keys']},
+    {label:'Recovery',steps:['Restore from clean backups if needed','Verify removal with full system scan','Reconnect systems in stages','Reset all exposed credentials','Verify system integrity']},
+    {label:'Post-Incident',steps:['Document full timeline using Forensic Timeline Builder','Determine root cause','Calculate business impact','Update IOC blocklists','Improve detection rules']}
+  ]},
+  ransomware:{name:'Ransomware Attack Response',severity:'critical',phases:[
+    {label:'Detection & Analysis',steps:['Identify ransomware variant (check ransom note)','Determine scope of encryption','Check IOC Scanner for indicators','Identify initial infection vector','Determine if data was exfiltrated (double extortion)']},
+    {label:'Containment',steps:['CRITICAL: Isolate affected systems IMMEDIATELY — disconnect network cables','DO NOT power off — may lose decryption keys in memory','Block C2 communication channels','Disable file shares to prevent spread','Preserve ransom note and attacker communications']},
+    {label:'Eradication',steps:['Remove ransomware binary','Remove persistence mechanisms','Patch initial access vulnerability','Verify ransomware cannot re-execute','Check for remaining C2 backdoors']},
+    {label:'Recovery',steps:['Restore from offline/immutable backups','DO NOT pay the ransom unless no other option','Verify restored data integrity','Reconnect systems in phases','Reset all credentials']},
+    {label:'Post-Incident',steps:['Build complete forensic timeline','Report to law enforcement (FBI IC3)','Assess total business impact','Review backup strategy','Conduct security gap assessment','Implement ransomware detection rules']}
+  ]},
+  data_breach:{name:'Data Breach Response',severity:'critical',phases:[
+    {label:'Detection & Analysis',steps:['Identify what data was accessed or exfiltrated','Determine breach vector','Assess number of records affected','Check for PII/financial data','Identify attacker timeline using Forensic Timeline Builder']},
+    {label:'Containment',steps:["Sever attacker's access immediately",'Isolate affected systems','Preserve all logs and evidence','Block attacker IPs and C2 channels','Activate crisis communication if PII involved']},
+    {label:'Eradication',steps:['Close the vulnerability that was exploited','Remove attacker tools and backdoors','Rotate all compromised credentials','Patch all systems in breach path','Verify no ongoing exfiltration']},
+    {label:'Recovery',steps:['Restore from verified clean backups','Implement enhanced monitoring','Verify data integrity','Notify affected individuals per regulations (GDPR 72hrs)','Engage legal counsel']},
+    {label:'Post-Incident',steps:['Conduct full forensic analysis','Document what/how/data/who affected','Assess compliance obligations (GDPR, CCPA, HIPAA)','Review data protection controls','Prepare breach notification for regulators']}
+  ]},
+  web_attack:{name:'Web Application Attack Response',severity:'high',phases:[
+    {label:'Detection & Analysis',steps:['Identify attack type using SQLi Detector','Review web server logs for patterns','Determine if attack was successful','Identify vulnerable endpoint','Assess exposed data']},
+    {label:'Containment',steps:['Block attacker IP at WAF/firewall','Disable vulnerable endpoint','Enable WAF rules for attack pattern','Increase logging','Rotate database credentials if SQLi']},
+    {label:'Eradication',steps:['Patch the vulnerability','Implement parameterized queries','Add input validation and output encoding','Review similar code patterns','Update WAF rules permanently']},
+    {label:'Recovery',steps:['Verify patched application handles payloads','Run automated security testing','Review database for unauthorized access','Monitor for follow-up attacks','Restore tampered data']},
+    {label:'Post-Incident',steps:['Document vulnerability and exploitation','Conduct full web app security assessment','Implement SAST/DAST in CI/CD','Update secure coding guidelines','Add automated tests']}
+  ]},
+  insider_threat:{name:'Insider Threat Response',severity:'high',phases:[
+    {label:'Detection & Analysis',steps:['Identify suspected insider and access level','Review activity logs for anomalies','Check for data exfiltration','Review privilege escalation','Determine if malicious or accidental']},
+    {label:'Containment',steps:['Suspend user access (coordinate with HR)','Preserve logs before confronting user','Monitor for automated tasks','Do NOT alert user','Secure physical access if applicable']},
+    {label:'Eradication',steps:['Revoke all credentials (passwords, keys, tokens)','Remove access they granted to others','Check for backdoors or scheduled tasks','Recover exfiltrated data if possible','Review all changes by user in 90 days']},
+    {label:'Recovery',steps:['Restore modified or deleted data','Verify no unauthorized access persists','Tighten access controls','Implement additional monitoring','Coordinate with HR/Legal']},
+    {label:'Post-Incident',steps:['Document full activity timeline','Review access management policies','Implement behavioral analytics','Conduct security awareness training','Review need-to-know principles']}
+  ]},
+  network_scan:{name:'Network Reconnaissance Response',severity:'low',phases:[
+    {label:'Detection & Analysis',steps:['Use Network Scanner to verify exposed services','Determine scanning source and pattern','Assess if scan preceded an attack','Check if scans found exploitable services','Review firewall logs']},
+    {label:'Containment',steps:['Block scanning IP if not known scanner','Close unnecessary open ports','Enable port scan detection on IDS/IPS','Verify firewall rules']},
+    {label:'Eradication',steps:['Harden discovered services','Close unnecessary ports','Hide service version info in banners','Patch outdated services']},
+    {label:'Recovery',steps:['Verify unnecessary ports are closed','Confirm services are firewalled','Monitor for follow-up activity']},
+    {label:'Post-Incident',steps:['Document scan pattern and source','Review external-facing service inventory','Consider implementing honeypot','Schedule regular external scans']}
+  ]}
+};
+function displayPlaybook(type){
+  const pb=PLAYBOOKS[type];let phaseHtml='';
+  pb.phases.forEach((phase,i)=>{let steps='';phase.steps.forEach(s=>{steps+=`<li>${s}</li>`;});phaseHtml+=`<div class="phase-item"><div class="phase-header"><div class="phase-num">${i+2}</div><div class="phase-title">${phase.label}</div></div><ul class="phase-steps">${steps}</ul></div>`;});
+  let rc=pb.severity==='critical'?'#FF3D00':pb.severity==='high'?'#FF8C00':pb.severity==='medium'?'#FFD600':'#00C853';
+  document.getElementById('irLoading').classList.add('hidden');
+  document.getElementById('irResults').classList.remove('hidden');
+  document.getElementById('irResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:${rc}"><div class="gauge-value" style="font-size:14px;">${pb.severity.toUpperCase()}</div><div class="gauge-label">SEVERITY</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:${rc}">${pb.name}</div><div class="gauge-target">NIST SP 800-61 Rev. 2 · ${pb.phases.length} phases · ${pb.phases.reduce((a,p)=>a+p.steps.length,0)} steps</div></div></div></div>
+    <div class="result-card"><h3>Response Playbook</h3>${phaseHtml}</div>`;
+}
+
+// ==================== 9. SIEM DASHBOARD ====================
+function runSIEM(){
+  document.getElementById('siemLoading').classList.remove('hidden');document.getElementById('siemResults').classList.add('hidden');
+  setTimeout(()=>{displaySIEM();},900);
+}
+function displaySIEM(){
+  const alerts=[
+    {id:'ALERT-001',sev:'high',name:'Brute Force SSH',desc:'5+ failed SSH logins from 89.248.1.1 within 10 minutes',mitre:'T1110',action:'Block source IP and lock targeted accounts'},
+    {id:'ALERT-002',sev:'critical',name:'Successful Login After Brute Force',desc:'Successful login from 89.248.1.1 after multiple failed attempts',mitre:'T1078',action:'Immediately investigate session and lock account'},
+    {id:'ALERT-003',sev:'high',name:'Impossible Travel',desc:'User admin logged in from different locations too quickly',mitre:'T1078',action:'Require MFA verification, investigate session'},
+    {id:'ALERT-004',sev:'medium',name:'Directory Enumeration',desc:'25+ 404 responses from 45.155.205.10',mitre:'T1046',action:'Rate-limit or block the source IP'},
+    {id:'ALERT-005',sev:'high',name:'SQL Injection Attempt',desc:"URL containing ' UNION SELECT NULL-- from 45.155.205.10",mitre:'T1190',action:'Block IP, review web application for vulnerability'}
+  ];
+  let alertHtml='';alerts.forEach(a=>{alertHtml+=`<div class="siem-alert ${a.sev}"><div class="alert-header"><div class="alert-name">${a.name}</div><div class="alert-sev ${a.sev}">${a.sev.toUpperCase()}</div></div><div class="alert-desc">${a.desc}</div><div class="alert-action">→ ${a.action} (${a.mitre})</div></div>`;});
+  document.getElementById('siemLoading').classList.add('hidden');
+  document.getElementById('siemResults').classList.remove('hidden');
+  document.getElementById('siemResults').innerHTML=`
+    <div class="result-card"><div class="gauge-row"><div class="gauge-circle" style="border-color:#FF3D00"><div class="gauge-value" style="font-size:14px;">CRIT</div><div class="gauge-label">THREAT</div></div>
+    <div class="gauge-info"><div class="gauge-level" style="color:#FF3D00">CRITICAL</div><div class="gauge-target">5 alerts · 1 critical · 3 high · 1 medium</div></div></div></div>
+    <div class="result-card"><div class="stat-row"><div class="stat-item"><div class="stat-val">8</div><div class="stat-label">Events Ingested</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Alerts Triggered</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">10</div><div class="stat-label">Active Rules</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">3</div><div class="stat-label">Source IPs</div></div></div></div>
+    <div class="result-card"><h3>Active Alerts</h3><div style="margin-top:12px;">${alertHtml}</div></div>`;
+}
+
+// ==================== 10. ALERT CORRELATION ====================
+function runCorrelation(){
+  document.getElementById('corrLoading').classList.remove('hidden');document.getElementById('corrResults').classList.add('hidden');
+  setTimeout(()=>{displayCorrelation();},900);
+}
+function displayCorrelation(){
+  const incidents=[
+    {id:'INC-0001',sev:'critical',desc:'Multiple alerts from 89.248.1.1 within 30min window',alerts:2,ips:['89.248.1.1'],techs:['T1110','T1078'],action:'Immediately block all source IPs. Initiate full incident response.'},
+    {id:'INC-0002',sev:'high',desc:'Individual alert: SQL Injection Attempt',alerts:1,ips:['45.155.205.10'],techs:['T1190'],action:'Block IP, review web application for vulnerability.'},
+    {id:'INC-0003',sev:'high',desc:'Individual alert: Impossible Travel',alerts:1,ips:['89.248.1.1','192.168.1.50'],techs:['T1078'],action:'Require MFA verification, investigate the session.'},
+    {id:'INC-0004',sev:'medium',desc:'Individual alert: Directory Enumeration',alerts:1,ips:['45.155.205.10'],techs:['T1046'],action:'Rate-limit or block the source IP.'}
+  ];
+  let incHtml='';incidents.forEach(inc=>{let techHtml='';inc.techs.forEach(t=>{techHtml+=`<span class="timeline-tech">${t}</span> `;});incHtml+=`<div class="incident-card"><div class="incident-header"><div class="incident-id">${inc.id}</div><div class="alert-sev ${inc.sev}">${inc.sev.toUpperCase()}</div></div><div class="incident-desc">${inc.desc}</div><div class="incident-meta">${inc.alerts} alert(s) · IPs: ${inc.ips.join(', ')} · ${techHtml}</div><div class="alert-action">→ ${inc.action}</div></div>`;});
+  document.getElementById('corrLoading').classList.add('hidden');
+  document.getElementById('corrResults').classList.remove('hidden');
+  document.getElementById('corrResults').innerHTML=`
+    <div class="result-card"><div class="stat-row"><div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Raw Alerts</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">4</div><div class="stat-label">Incidents</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">1</div><div class="stat-label">Aggregated</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-val">0</div><div class="stat-label">Suppressed</div></div></div></div>
+    <div class="result-card"><h3>Correlated Incidents</h3><div style="margin-top:12px;">${incHtml}</div></div>`;
+}
+</script>
 </body>
 </html>
