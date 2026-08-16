@@ -3,126 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhishGuard — AI Phishing URL Detector</title>
+  <title>PhishGuard — Security Suite</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
     <header>
       <div class="logo">
         <span class="logo-icon">🛡️</span>
         <h1>PhishGuard</h1>
-        <span class="badge">AI-Powered</span>
+        <span class="badge">Security Suite</span>
       </div>
-      <p class="subtitle">Detect phishing URLs using machine learning — 18 feature analysis with real-time risk scoring</p>
+      <p class="subtitle">AI phishing detection + network security scanning — two tools, one suite</p>
     </header>
 
-    <!-- Input Section -->
-    <section class="input-section">
-      <div class="input-row">
-        <input type="text" id="urlInput" placeholder="Enter a URL (e.g., paypal-secure-login.tk/account/verify)" autocomplete="off">
-        <button id="scanBtn" onclick="scanUrl()">SCAN</button>
+    <!-- Tab Navigation -->
+    <nav class="tabs">
+      <button class="tab active" onclick="switchTab('phishing')" id="tab-phishing">
+        🔍 Phishing Detector
+      </button>
+      <button class="tab" onclick="switchTab('scanner')" id="tab-scanner">
+        🖥️ Network Scanner
+      </button>
+    </nav>
+
+    <!-- PHISHING DETECTOR TAB -->
+    <div id="phishing-panel" class="tab-panel active">
+      <section class="input-section">
+        <div class="input-row">
+          <input type="text" id="urlInput" placeholder="Enter a URL (e.g., paypal-secure-login.tk/account/verify)" autocomplete="off">
+          <button id="scanBtn" onclick="scanUrl()">SCAN</button>
+        </div>
+        <div class="quick-test">
+          <span>Quick test:</span>
+          <button class="test-btn" onclick="testUrl('https://www.google.com/search?q=hello')">Legitimate</button>
+          <button class="test-btn" onclick="testUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button>
+          <button class="test-btn" onclick="testUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button>
+        </div>
+      </section>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Analyzing URL...</p>
       </div>
-      <div class="quick-test">
-        <span>Quick test:</span>
-        <button class="test-btn" onclick="testUrl('https://www.google.com/search?q=hello')">Legitimate</button>
-        <button class="test-btn" onclick="testUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button>
-        <button class="test-btn" onclick="testUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button>
-      </div>
-    </section>
+      <div id="error" class="error hidden"></div>
 
-    <!-- Loading -->
-    <div id="loading" class="loading hidden">
-      <div class="spinner"></div>
-      <p>Analyzing URL...</p>
-    </div>
-
-    <!-- Error -->
-    <div id="error" class="error hidden"></div>
-
-    <!-- Results -->
-    <div id="results" class="results hidden">
-      <!-- Risk Score -->
-      <div class="risk-score-card">
-        <div class="risk-gauge">
+      <div id="results" class="results hidden">
+        <div class="risk-score-card">
           <div class="gauge-circle" id="gaugeCircle">
             <div class="gauge-value" id="riskScore">0</div>
             <div class="gauge-label">RISK SCORE</div>
           </div>
-        </div>
-        <div class="risk-info">
-          <div class="risk-level" id="riskLevel">LOW</div>
-          <div class="risk-url" id="scannedUrl"></div>
-          <div class="risk-prob">
-            <div class="prob-bar">
-              <div class="prob-label">Legitimate</div>
-              <div class="prob-fill legit" id="legitBar"></div>
-              <div class="prob-pct" id="legitPct">0%</div>
-            </div>
-            <div class="prob-bar">
-              <div class="prob-label">Phishing</div>
-              <div class="prob-fill phish" id="phishBar"></div>
-              <div class="prob-pct" id="phishPct">0%</div>
+          <div class="risk-info">
+            <div class="risk-level" id="riskLevel">LOW</div>
+            <div class="risk-url" id="scannedUrl"></div>
+            <div class="risk-prob">
+              <div class="prob-bar">
+                <div class="prob-label">Legitimate</div>
+                <div class="prob-fill legit" id="legitBar"></div>
+                <div class="prob-pct" id="legitPct">0%</div>
+              </div>
+              <div class="prob-bar">
+                <div class="prob-label">Phishing</div>
+                <div class="prob-fill phish" id="phishBar"></div>
+                <div class="prob-pct" id="phishPct">0%</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Summary -->
-      <div class="summary-card">
-        <div class="summary-stat">
-          <div class="stat-val" id="suspiciousCount">0</div>
-          <div class="stat-label">Suspicious Features</div>
+        <div class="summary-card">
+          <div class="summary-stat">
+            <div class="stat-val" id="suspiciousCount">0</div>
+            <div class="stat-label">Suspicious Features</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-stat">
+            <div class="stat-val" id="totalFeatures">18</div>
+            <div class="stat-label">Features Analyzed</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-stat">
+            <div class="stat-val" id="verdict">SAFE</div>
+            <div class="stat-label">Verdict</div>
+          </div>
         </div>
-        <div class="summary-divider"></div>
-        <div class="summary-stat">
-          <div class="stat-val" id="totalFeatures">18</div>
-          <div class="stat-label">Total Features Analyzed</div>
-        </div>
-        <div class="summary-divider"></div>
-        <div class="summary-stat">
-          <div class="stat-val" id="verdict">SAFE</div>
-          <div class="stat-label">Verdict</div>
+
+        <div class="features-card">
+          <h3>Feature Analysis Breakdown</h3>
+          <p class="card-desc">18 URL features extracted and evaluated by the Random Forest model</p>
+          <div id="featureList" class="feature-list"></div>
         </div>
       </div>
+    </div>
 
-      <!-- Feature Breakdown -->
-      <div class="features-card">
-        <h3>Feature Analysis Breakdown</h3>
-        <p class="card-desc">18 URL features extracted and evaluated by the Random Forest model</p>
-        <div id="featureList" class="feature-list"></div>
+    <!-- NETWORK SCANNER TAB -->
+    <div id="scanner-panel" class="tab-panel">
+      <section class="input-section">
+        <div class="input-row">
+          <input type="text" id="targetInput" placeholder="Enter target (e.g., scanme.nmap.org or 192.168.1.1)" autocomplete="off">
+          <button id="scanNetBtn" onclick="scanNetwork()">SCAN</button>
+        </div>
+        <div class="quick-test">
+          <span>Quick test:</span>
+          <button class="test-btn" onclick="testTarget('scanme.nmap.org')">scanme.nmap.org</button>
+          <button class="test-btn" onclick="testTarget('localhost')">localhost</button>
+        </div>
+        <p class="scanner-note">ℹ️ Scans 60+ common ports for open services, banners, and vulnerabilities. For authorized targets only.</p>
+      </section>
+
+      <div id="netLoading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Scanning target — this may take 10-30 seconds...</p>
+      </div>
+      <div id="netError" class="error hidden"></div>
+
+      <div id="netResults" class="results hidden">
+        <div class="risk-score-card">
+          <div class="gauge-circle" id="netGaugeCircle">
+            <div class="gauge-value" id="netRiskScore">0</div>
+            <div class="gauge-label">RISK SCORE</div>
+          </div>
+          <div class="risk-info">
+            <div class="risk-level" id="netRiskLevel">LOW</div>
+            <div class="risk-url" id="scannedTarget"></div>
+            <div class="net-stats">
+              <div class="net-stat-item">
+                <span class="net-stat-label">Ports Scanned</span>
+                <span class="net-stat-val" id="portsScanned">0</span>
+              </div>
+              <div class="net-stat-item">
+                <span class="net-stat-label">Open Ports</span>
+                <span class="net-stat-val" id="portsOpen">0</span>
+              </div>
+              <div class="net-stat-item">
+                <span class="net-stat-label">Resolved IP</span>
+                <span class="net-stat-val" id="resolvedIp">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-stat">
+            <div class="stat-val" id="highRiskPorts">0</div>
+            <div class="stat-label">High Risk</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-stat">
+            <div class="stat-val" id="mediumRiskPorts">0</div>
+            <div class="stat-label">Medium Risk</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-stat">
+            <div class="stat-val" id="lowRiskPorts">0</div>
+            <div class="stat-label">Low Risk</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-stat">
+            <div class="stat-val" id="netVerdict">SECURE</div>
+            <div class="stat-label">Status</div>
+          </div>
+        </div>
+
+        <div class="scan-summary" id="scanSummary"></div>
+
+        <div class="features-card">
+          <h3>Open Ports & Services</h3>
+          <p class="card-desc">Detailed breakdown of detected services, banners, and vulnerabilities</p>
+          <div id="portList" class="feature-list"></div>
+        </div>
       </div>
     </div>
 
     <!-- Info Section -->
-    <section class="info-section" id="infoSection">
+    <section class="info-section">
       <h3>How It Works</h3>
       <div class="info-grid">
         <div class="info-card">
           <div class="info-icon">🔍</div>
-          <h4>Feature Extraction</h4>
-          <p>18 URL features are extracted: IP detection, HTTPS status, domain length, suspicious keywords, entropy, punycode, and more.</p>
+          <h4>Phishing Detection</h4>
+          <p>18 URL features extracted and classified by a Random Forest ML model trained on phishing patterns.</p>
         </div>
         <div class="info-card">
-          <div class="info-icon">🤖</div>
-          <h4>ML Classification</h4>
-          <p>A Random Forest classifier trained on phishing and legitimate URL patterns evaluates the extracted features.</p>
+          <div class="info-icon">🖥️</div>
+          <h4>Port Scanning</h4>
+          <p>Scans 60+ common ports using Python sockets with concurrent threading. Detects services and captures banners.</p>
         </div>
         <div class="info-card">
-          <div class="info-icon">📊</div>
-          <h4>Risk Scoring</h4>
-          <p>The model outputs a probability score (0-100%) with a full breakdown of which features triggered the detection.</p>
+          <div class="info-icon">⚠️</div>
+          <h4>Vulnerability Assessment</h4>
+          <p>Each open port is evaluated against known vulnerability patterns with risk-level classification and remediation guidance.</p>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
     <footer>
-      <p>PhishGuard — AI Phishing URL Detector · Built with Python, scikit-learn & Flask</p>
-      <p class="footer-note">⚠️ This tool is for educational and research purposes. Always verify URLs through multiple security tools.</p>
+      <p>PhishGuard Security Suite — Phishing Detection + Network Scanner</p>
+      <p>Built with Python, scikit-learn, Flask & socket · By Albert Cho Taylor</p>
+      <p class="footer-note">⚠️ For educational and authorized security testing only. Always scan targets you own or have permission to test.</p>
     </footer>
   </div>
 
