@@ -1,140 +1,91 @@
 # PhishGuard — Security Suite
 
-> AI phishing URL detection + network security scanner. Two cybersecurity tools in one Python suite.
+> 10 cybersecurity tools in one Python suite. AI phishing detection, network scanning, log analysis, IOC scanning, forensic timeline, IR playbooks, and a mini-SIEM.
 
-PhishGuard is a Python-based security toolkit that combines phishing URL detection using machine learning with network port scanning and vulnerability assessment. Built for cybersecurity professionals, researchers, and developers who need to assess security threats quickly.
+PhishGuard is a comprehensive Python-based cybersecurity toolkit covering ethical hacking, SOC analysis, incident response, and SIEM operations. Built for security professionals, researchers, and developers who need to assess and respond to security threats.
 
-## 🔍 Two Tools, One Suite
+## 🔧 10 Tools in One Suite
 
-### 1. Phishing URL Detector
-- **18 URL Features** — IP detection, HTTPS status, suspicious keywords, entropy, punycode, TLD analysis, and more
-- **Random Forest ML Model** — Trained on phishing and legitimate URL patterns with scikit-learn
-- **Real-time Risk Scoring** — 0-100% risk score with LOW / MEDIUM / HIGH classification
-- **Feature Breakdown** — See exactly which features triggered the detection and why
+### Ethical Hacking
+1. **Phishing URL Detector** — 18 URL features analyzed by a Random Forest ML model with real-time risk scoring
+2. **Network Port Scanner** — Scans 68 common ports, detects services, grabs banners, flags vulnerabilities
+3. **Password Strength Auditor** — Entropy analysis, crack-time estimation (GPU scenarios), pattern detection, policy recommendations
+4. **SQL Injection & XSS Detector** — Tests 15 SQLi + 15 XSS payloads, detects injection points, checks security headers
 
-### 2. Network Security Scanner
-- **68 Common Ports** — Scans FTP, SSH, HTTP, HTTPS, MySQL, Redis, MongoDB, RDP, Docker, and more
-- **Service Detection** — Identifies the service running on each open port
-- **Banner Grabbing** — Captures service banners for fingerprinting
-- **Vulnerability Assessment** — Flags known vulnerabilities per port with remediation guidance
-- **Risk Scoring** — Overall risk score (CRITICAL / HIGH / MEDIUM / LOW / MINIMAL) based on exposed services
-- **Concurrent Scanning** — Uses ThreadPoolExecutor for fast multi-port scanning
+### SOC Analysis
+5. **Log Analyzer & Threat Correlator** — Parses SSH/Apache/Windows logs, detects brute-force, impossible travel, privilege escalation, correlates attack chains
+6. **IOC Scanner** — Checks IPs, domains, file hashes, and URLs against threat intelligence with typosquatting detection
 
-## 🛡️ Features Detected
+### Incident Response
+7. **Forensic Timeline Builder** — Maps events to Lockheed Martin Kill Chain and MITRE ATT&CK framework, generates attack narrative
+8. **IR Playbook Engine** — NIST SP 800-61 compliant response procedures for 8 incident types (phishing, ransomware, malware, data breach, brute force, web attack, insider threat, network scan)
+
+### SIEM
+9. **Mini-SIEM Dashboard** — Central log aggregation with 10 correlation rules, real-time alerting, threat-level dashboard, top source IPs, event feed
+10. **Alert Correlation Engine** — Deduplication, aggregation, kill chain progression grouping, reduces alert fatigue with intelligent incident grouping
+
+## 🛡️ Detection Capabilities
 
 ### Phishing Detection (18 URL Features)
-| # | Feature | Description |
-|---|---------|-------------|
-| 1 | URL Length | Phishing URLs tend to be longer than legitimate ones |
-| 2 | Domain Length | Unusually long domains can indicate phishing |
-| 3 | Has IP Address | Using an IP instead of a domain name is a phishing indicator |
-| 4 | Has @ Symbol | Everything before @ is ignored in URLs |
-| 5 | Uses HTTPS | Legitimate sites typically use HTTPS encryption |
-| 6 | Number of Dots | Excessive dots suggest many subdomains (phishing pattern) |
-| 7 | Number of Dashes | Dashes are common in phishing URLs to mimic brands |
-| 8 | Number of Subdomains | Multiple subdomains can indicate phishing |
-| 9 | Suspicious TLD | TLDs like .tk, .ml, .ga, .cf are associated with phishing |
-| 10 | Has Port | Non-standard ports in URLs are suspicious |
-| 11 | Query Parameters | Excessive parameters can indicate tracking or phishing |
-| 12 | Path Length | Long paths can hide the true destination |
-| 13 | Double Slash Redirect | // in path can indicate redirect attempts |
-| 14 | Suspicious Keywords | Words like "login", "verify", "paypal", "free", "gift" |
-| 15 | Hex Encoding | %XX encoded characters can hide malicious content |
-| 16 | Digit-to-Letter Ratio | High digit ratio in domain is suspicious |
-| 17 | Punycode/IDN | Internationalized domain names enable homograph attacks |
-| 18 | URL Entropy | High entropy suggests randomly generated URLs |
+URL Length, Domain Length, IP Detection, @ Symbol, HTTPS, Dots, Dashes, Subdomains, Suspicious TLD, Port, Query Params, Path Length, Double Slash, Suspicious Keywords, Hex Encoding, Digit Ratio, Punycode, Entropy
 
-### Network Scanner (68 Ports Monitored)
-| Risk Level | Ports | Examples |
-|------------|-------|----------|
-| HIGH | 23, 445, 1433, 2375, 3389, 5432, 5900, 6379, 9200, 11211, 27017 | Telnet, SMB, MSSQL, Docker API, RDP, PostgreSQL, VNC, Redis, Elasticsearch, Memcached, MongoDB |
-| MEDIUM | 21, 80, 110, 161, 5000, 8080, 3000, 8000 | FTP, HTTP, POP3, SNMP, Dev servers |
-| LOW | 22, 443, 465, 587, 636, 993, 995 | SSH, HTTPS, SMTPS, IMAPS, POP3S |
+### Network Scanner (68 Ports)
+High Risk: Telnet(23), SMB(445), MSSQL(1433), Docker API(2375), RDP(3389), PostgreSQL(5432), VNC(5900), Redis(6379), Elasticsearch(9200), MongoDB(27017), Memcached(11211)
+Medium Risk: FTP(21), HTTP(80), POP3(110), SNMP(161), Dev Servers(3000/5000/8080)
+Low Risk: SSH(22), HTTPS(443), SMTPS(465), IMAPS(993), POP3S(995)
+
+### MITRE ATT&CK Techniques Mapped
+T1110 (Brute Force), T1078 (Valid Accounts), T1059 (Command Execution), T1046 (Network Scan), T1190 (Exploit App), T1071 (C2 Protocol), T1041 (Exfiltration), T1486 (Ransomware), T1003 (Credential Dumping), T1098 (Account Manipulation), T1087 (Account Discovery)
 
 ## 📦 Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/crptoangel232/phishguard.git
 cd phishguard
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Train the phishing detection model (first run only)
-python model.py
-
-# Start the security suite server
-python app.py
+python model.py    # Train the phishing detection model
+python app.py      # Start the security suite
 ```
 
-The suite will be available at `http://localhost:5000`
-
-- Tab 1: Phishing URL Detector
-- Tab 2: Network Security Scanner
+Open `http://localhost:5000`
 
 ## 🏗 Architecture
 
 ```
 phishguard/
-├── app.py              # Flask web server (phishing API + scanner API)
-├── model.py            # ML model training (Random Forest with scikit-learn)
-├── features.py         # URL feature extraction (18 features)
-├── scanner.py          # Network scanner (port scan, service detection, vuln assessment)
-├── phishing_model.joblib  # Trained model (generated on first run)
-├── requirements.txt    # Python dependencies
-├── templates/
-│   └── index.html      # Web UI with tabs for both tools
-├── static/
-│   ├── css/style.css   # Dark cybersecurity theme
-│   └── js/app.js       # Frontend logic for both tools
-├── docs/
-│   └── index.html      # GitHub Pages live demo
+├── app.py                  # Flask server with all 10 API endpoints
+├── model.py                # ML model training (Random Forest)
+├── features.py             # URL feature extraction (18 features)
+├── scanner.py              # Network port scanner (68 ports, socket + threading)
+├── password_auditor.py     # Password strength analysis + crack-time
+├── sqli_detector.py        # SQL injection & XSS detection
+├── log_analyzer.py         # Log parsing + threat correlation
+├── ioc_scanner.py          # IOC reputation checking (IP, domain, hash, URL)
+├── forensic_timeline.py    # Kill chain + MITRE ATT&CK mapping
+├── ir_playbook.py          # NIST SP 800-61 incident response playbooks
+├── siem_engine.py          # Mini-SIEM with 10 correlation rules
+├── alert_correlation.py    # Alert deduplication + incident grouping
+├── templates/index.html    # Web UI
+├── static/css/style.css    # Dark cybersecurity theme
+├── static/js/app.js        # Frontend logic
+├── docs/index.html         # GitHub Pages live demo
 └── README.md
 ```
 
-## 🔧 How It Works
+## 🌐 Live Demo
 
-### Phishing Detection
-```
-URL Input → Feature Extraction (18 features) → Random Forest Model → Risk Score + Breakdown
-```
-
-### Network Scanning
-```
-Target Input → DNS Resolution → Concurrent Port Scan (68 ports) → Service Detection + Banner Grabbing → Vulnerability Assessment → Security Report
-```
+https://crptoangel232.github.io/phishguard/
 
 ## 🧪 Example Results
 
-### Phishing Detection
-**Legitimate URL:** `https://www.google.com/search?q=hello`
-- Risk Score: 0% — Verdict: SAFE — Suspicious Features: 0
-
-**Phishing URL:** `http://paypal-secure-login.tk/account/verify?id=12345`
-- Risk Score: 99% — Verdict: PHISHING — Flagged: No HTTPS, Suspicious TLD (.tk), 5 suspicious keywords
-
-### Network Scanning
-**Critical System:** 8 open ports, 5 HIGH RISK (MySQL, MongoDB, Redis, RDP, SMB)
-- Risk Score: 95 — Status: CRITICAL — Immediate remediation required
-
-**Secure System:** 2 open ports, 1 LOW, 1 MEDIUM (SSH, HTTP)
-- Risk Score: 5 — Status: MINIMAL — Standard hardening recommended
-
-## 🌐 Live Demo
-
-Try the phishing detector and view a network scanner demo at:
-https://crptoangel232.github.io/phishguard/
-
-## 🛠 Tech Stack
-
-- **Python** — Core language
-- **Flask** — Web framework
-- **scikit-learn** — Machine learning (Random Forest classifier)
-- **socket** — Network port scanning
-- **concurrent.futures** — Concurrent thread scanning
-- **NumPy** — Numerical processing
-- **HTML/CSS/JS** — Frontend interface
+1. **Phishing**: `http://paypal-secure-login.tk/account/verify` → 99% risk, PHISHING
+2. **Password Audit**: `Summer2024!` → 79/100 (Strong), 72 bits entropy, crack time: millions of years
+3. **IOC Scan**: `185.220.101.45` → Malicious (Known Tor exit node)
+4. **Log Analysis**: 5 failed logins + 1 success → CRITICAL, brute-force attack chain detected
+5. **Forensic Timeline**: Maps to MITRE T1110 (Brute Force) → T1078 (Valid Accounts) → T1059 (Command Execution)
+6. **IR Playbook**: Ransomware → 6-phase NIST playbook with 28 steps, immediate isolation as quick action
+7. **SIEM Dashboard**: 3 alerts (brute force, successful login after brute force, impossible travel) → CRITICAL
+8. **Alert Correlation**: 3 raw alerts → 2 incidents (aggregated + standalone), immediate block recommendation
 
 ## 📌 Project Info
 
@@ -144,4 +95,4 @@ https://crptoangel232.github.io/phishguard/
 
 ---
 
-⚠️ **Disclaimer:** This tool is for educational and authorized security testing only. Always scan targets you own or have explicit permission to test. The phishing detection model is trained on synthetic data — for production use, train on real datasets like PhishTank or OpenPhish.
+⚠️ **Disclaimer:** This tool is for educational and authorized security testing only. Always scan targets you own or have explicit permission to test.
