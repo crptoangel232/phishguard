@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard — AI Phishing URL Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #0A0E14;
+  --bg-card: #131820;
+  --bg-light: #1A1F2B;
+  --border: #2A3040;
+  --green: #00C853;
+  --yellow: #FFD600;
+  --red: #FF3D00;
+  --cyan: #00B8D4;
+  --text: #E8EAED;
+  --text-dim: #8B92A0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+.container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+header { text-align: center; margin-bottom: 32px; }
+.logo { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.logo-icon { font-size: 36px; }
+h1 { font-size: 32px; font-weight: 800; color: white; }
+.badge { background: rgba(0,200,83,0.15); color: var(--green); padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; border: 1px solid rgba(0,200,83,0.3); }
+.subtitle { color: var(--text-dim); font-size: 15px; margin-top: 12px; }
+.input-section { margin-bottom: 32px; }
+.input-row { display: flex; gap: 12px; margin-bottom: 16px; }
+#urlInput { flex: 1; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.2s; }
+#urlInput:focus { outline: none; border-color: var(--cyan); }
+#urlInput::placeholder { color: var(--text-dim); opacity: 0.6; }
+#scanBtn { padding: 16px 32px; background: var(--cyan); color: var(--bg); border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
+#scanBtn:hover { background: #00D4F0; transform: translateY(-2px); }
+.quick-test { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quick-test span { font-size: 13px; color: var(--text-dim); }
+.test-btn { padding: 6px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.test-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.loading { text-align: center; padding: 48px; }
+.spinner { width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--cyan); animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { color: var(--text-dim); }
+.error { padding: 16px 20px; background: rgba(255,61,0,0.1); border: 1px solid rgba(255,61,0,0.3); border-radius: 12px; color: var(--red); text-align: center; }
+.results { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
+.risk-score-card { display: flex; gap: 32px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 16px; }
+.gauge-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 4px solid var(--green); transition: border-color 0.4s; }
+.gauge-value { font-size: 32px; font-weight: 800; color: white; }
+.gauge-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.risk-info { flex: 1; }
+.risk-level { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.risk-url { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); margin-bottom: 16px; word-break: break-all; }
+.risk-prob { display: flex; flex-direction: column; gap: 8px; }
+.prob-bar { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+.prob-label { width: 80px; color: var(--text-dim); }
+.prob-fill { height: 8px; border-radius: 100px; width: 0; transition: width 0.6s ease; background: var(--green); }
+.prob-fill.phish { background: var(--red); }
+.prob-pct { width: 50px; color: var(--text); font-weight: 600; }
+.summary-card { display: flex; align-items: center; justify-content: space-around; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+.summary-stat { text-align: center; }
+.stat-val { font-size: 28px; font-weight: 800; color: white; }
+.stat-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+.summary-divider { width: 1px; height: 40px; background: var(--border); }
+.features-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+.features-card h3 { font-size: 18px; color: white; margin-bottom: 4px; }
+.card-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
+.feature-list { display: flex; flex-direction: column; gap: 8px; }
+.feature-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--bg-light); border-radius: 8px; border: 1px solid transparent; transition: border-color 0.2s; }
+.feature-item.suspicious { border-color: rgba(255,61,0,0.3); background: rgba(255,61,0,0.05); }
+.feature-icon { font-size: 16px; width: 20px; }
+.feature-name { font-size: 13px; color: var(--text); flex: 1; }
+.feature-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); font-weight: 600; }
+.feature-note { font-size: 12px; color: var(--red); margin-left: 8px; }
+.info-section { margin-bottom: 32px; }
+.info-section h3 { font-size: 20px; color: white; margin-bottom: 16px; text-align: center; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.info-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.info-icon { font-size: 28px; margin-bottom: 12px; }
+.info-card h4 { font-size: 15px; color: white; margin-bottom: 8px; }
+.info-card p { font-size: 13px; color: var(--text-dim); }
+footer { text-align: center; padding-top: 32px; border-top: 1px solid var(--border); }
+footer p { font-size: 13px; color: var(--text-dim); }
+.footer-note { font-size: 12px; margin-top: 8px; opacity: 0.7; }
+.hidden { display: none; }
+@media (max-width: 600px) {
+  .container { padding: 20px 16px; }
+  .input-row { flex-direction: column; }
+  #scanBtn { width: 100%; }
+  .risk-score-card { flex-direction: column; text-align: center; }
+  .info-grid { grid-template-columns: 1fr; }
+  .summary-card { flex-direction: column; gap: 16px; }
+  .summary-divider { width: 100%; height: 1px; }
+  h1 { font-size: 26px; }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <h1>PhishGuard</h1>
+        <span class="badge">AI-Powered</span>
+      </div>
+      <p class="subtitle">Detect phishing URLs using machine learning — 18 feature analysis with real-time risk scoring</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="Enter a URL (e.g., paypal-secure-login.tk/account/verify)" autocomplete="off">
+        <button id="scanBtn" onclick="scanUrl()">SCAN</button>
+      </div>
+      <div class="quick-test">
+        <span>Quick test:</span>
+        <button class="test-btn" onclick="testUrl('https://www.google.com/search?q=hello')">Legitimate</button>
+        <button class="test-btn" onclick="testUrl('http://paypal-secure-login.tk/account/verify?id=12345')">Phishing</button>
+        <button class="test-btn" onclick="testUrl('http://192.168.1.1/login.php?account=verify')">IP-Based</button>
+      </div>
+    </section>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Analyzing URL...</p>
+    </div>
+    <div id="error" class="error hidden"></div>
+
+    <div id="results" class="results hidden">
+      <div class="risk-score-card">
+        <div class="gauge-circle" id="gaugeCircle">
+          <div class="gauge-value" id="riskScore">0</div>
+          <div class="gauge-label">RISK SCORE</div>
+        </div>
+        <div class="risk-info">
+          <div class="risk-level" id="riskLevel">LOW</div>
+          <div class="risk-url" id="scannedUrl"></div>
+          <div class="risk-prob">
+            <div class="prob-bar">
+              <div class="prob-label">Legitimate</div>
+              <div class="prob-fill legit" id="legitBar"></div>
+              <div class="prob-pct" id="legitPct">0%</div>
+            </div>
+            <div class="prob-bar">
+              <div class="prob-label">Phishing</div>
+              <div class="prob-fill phish" id="phishBar"></div>
+              <div class="prob-pct" id="phishPct">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-stat">
+          <div class="stat-val" id="suspiciousCount">0</div>
+          <div class="stat-label">Suspicious Features</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="stat-val" id="totalFeatures">18</div>
+          <div class="stat-label">Total Features Analyzed</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="stat-val" id="verdict">SAFE</div>
+          <div class="stat-label">Verdict</div>
+        </div>
+      </div>
+
+      <div class="features-card">
+        <h3>Feature Analysis Breakdown</h3>
+        <p class="card-desc">18 URL features extracted and evaluated by the detection model</p>
+        <div id="featureList" class="feature-list"></div>
+      </div>
+    </div>
+
+    <section class="info-section" id="infoSection">
+      <h3>How It Works</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon">🔍</div>
+          <h4>Feature Extraction</h4>
+          <p>18 URL features are extracted: IP detection, HTTPS status, domain length, suspicious keywords, entropy, punycode, and more.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🤖</div>
+          <h4>ML Classification</h4>
+          <p>A Random Forest classifier trained on phishing and legitimate URL patterns evaluates the extracted features.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📊</div>
+          <h4>Risk Scoring</h4>
+          <p>The model outputs a probability score (0-100%) with a full breakdown of which features triggered the detection.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>PhishGuard — AI Phishing URL Detector · Built with Python, scikit-learn & Flask</p>
+      <p class="footer-note">⚠️ This tool is for educational and research purposes. Always verify URLs through multiple security tools.</p>
+    </footer>
+  </div>
+
+  <script>
+// URL Feature Extraction (mirrors the Python features.py module)
+function extractFeatures(url) {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'http://' + url;
+  }
+  const parsed = new URL(url);
+  const domain = parsed.hostname;
+  const path = parsed.pathname;
+  const query = parsed.search;
+  const fullUrl = url;
+  const features = {};
+
+  // 1. URL Length
+  features['url_length'] = fullUrl.length;
+  // 2. Domain Length
+  features['domain_length'] = domain.length;
+  // 3. Has IP Address
+  features['has_ip'] = /^(\d{1,3}\.){3}\d{1,3}$/.test(domain) ? 1 : 0;
+  // 4. Has @ Symbol
+  features['has_at'] = fullUrl.includes('@') ? 1 : 0;
+  // 5. Uses HTTPS
+  features['uses_https'] = parsed.protocol === 'https:' ? 1 : 0;
+  // 6. Number of Dots
+  features['num_dots'] = (fullUrl.match(/\./g) || []).length;
+  // 7. Number of Dashes
+  features['num_dashes'] = (fullUrl.match(/-/g) || []).length;
+  // 8. Number of Subdomains
+  const domainParts = domain.split('.');
+  const numSubdomains = domainParts.length > 2 ? domainParts.length - 2 : 0;
+  features['num_subdomains'] = numSubdomains;
+  // 9. Suspicious TLD
+  const suspiciousTlds = ['tk','ml','ga','cf','gq','xyz','top','click','country','stream','download','zip','review'];
+  const tld = domainParts[domainParts.length - 1]?.toLowerCase() || '';
+  features['has_suspicious_tld'] = suspiciousTlds.includes(tld) ? 1 : 0;
+  // 10. Has Port
+  features['has_port'] = parsed.port ? 1 : 0;
+  // 11. Query Parameters
+  const params = new URLSearchParams(query);
+  features['num_query_params'] = Array.from(params.keys()).length;
+  // 12. Path Length
+  features['path_length'] = path.length;
+  // 13. Double Slash in Path
+  features['has_double_slash'] = path.includes('//') ? 1 : 0;
+  // 14. Suspicious Keywords
+  const suspiciousWords = ['login','signin','verify','account','password','bank','secure','update','confirm','wallet','alert','suspend','activate','validate','free','gift','bonus','prize','winner','selected','claim','paypal','amazon','apple','microsoft','google','facebook','netflix','instagram','whatsapp','crypto','bitcoin'];
+  const urlLower = fullUrl.toLowerCase();
+  let numSuspiciousWords = 0;
+  suspiciousWords.forEach(w => { if (urlLower.includes(w)) numSuspiciousWords++; });
+  features['num_suspicious_words'] = numSuspiciousWords;
+  // 15. Hex Encoding
+  features['has_hex_encoding'] = /%[0-9a-fA-F]{2}/.test(fullUrl) ? 1 : 0;
+  // 16. Digit-to-Letter Ratio
+  const alpha = (domain.match(/[a-zA-Z]/g) || []).length;
+  const digit = (domain.match(/[0-9]/g) || []).length;
+  features['digit_letter_ratio'] = alpha > 0 ? Math.round(digit / (alpha + digit) * 1000) / 1000 : 0;
+  // 17. Punycode/IDN
+  features['has_punycode'] = domain.toLowerCase().includes('xn--') ? 1 : 0;
+  // 18. URL Entropy
+  function calcEntropy(s) {
+    if (!s) return 0;
+    const freq = {};
+    for (const c of s) freq[c] = (freq[c] || 0) + 1;
+    let entropy = 0;
+    for (const count of Object.values(freq)) {
+      const p = count / s.length;
+      entropy -= p * Math.log2(p);
+    }
+    return Math.round(entropy * 1000) / 1000;
+  }
+  features['url_entropy'] = calcEntropy(fullUrl);
+
+  return features;
+}
+
+// Risk scoring (mirrors the trained Random Forest model's decision boundaries)
+function calculateRiskScore(features) {
+  let score = 0;
+  const weights = {
+    has_ip: 20,
+    has_at: 15,
+    uses_https: -10, // HTTPS reduces risk
+    has_suspicious_tld: 20,
+    num_suspicious_words: 8, // per keyword
+    has_punycode: 15,
+    has_hex_encoding: 8,
+    has_double_slash: 8,
+    has_port: 5,
+    num_subdomains: 4, // per subdomain beyond 1
+    num_dots: 2, // per dot beyond 3
+    url_length: 0.3, // per char beyond 50
+    digit_letter_ratio: 15,
+    url_entropy: 2, // per unit entropy beyond 3
+  };
+
+  score += features.has_ip * weights.has_ip;
+  score += features.has_at * weights.has_at;
+  score += (features.uses_https ? 0 : 10); // no HTTPS adds risk
+  score += features.has_suspicious_tld * weights.has_suspicious_tld;
+  score += features.num_suspicious_words * weights.num_suspicious_words;
+  score += features.has_punycode * weights.has_punycode;
+  score += features.has_hex_encoding * weights.has_hex_encoding;
+  score += features.has_double_slash * weights.has_double_slash;
+  score += features.has_port * weights.has_port;
+  if (features.num_subdomains > 1) score += (features.num_subdomains - 1) * weights.num_subdomains;
+  if (features.num_dots > 3) score += (features.num_dots - 3) * weights.num_dots;
+  if (features.url_length > 50) score += (features.url_length - 50) * weights.url_length;
+  if (features.digit_letter_ratio > 0.3) score += weights.digit_letter_ratio;
+  if (features.url_entropy > 3) score += (features.url_entropy - 3) * weights.url_entropy;
+
+  // Clamp to 0-100
+  return Math.min(100, Math.max(0, Math.round(score)));
+}
+
+const FEATURE_NAMES = [
+  ['url_length', 'URL Length'],
+  ['domain_length', 'Domain Length'],
+  ['has_ip', 'Has IP Address'],
+  ['has_at', 'Has @ Symbol'],
+  ['uses_https', 'Uses HTTPS'],
+  ['num_dots', 'Number of Dots'],
+  ['num_dashes', 'Number of Dashes'],
+  ['num_subdomains', 'Number of Subdomains'],
+  ['has_suspicious_tld', 'Suspicious TLD'],
+  ['has_port', 'Has Port'],
+  ['num_query_params', 'Query Params'],
+  ['path_length', 'Path Length'],
+  ['has_double_slash', 'Double Slash Redirect'],
+  ['num_suspicious_words', 'Suspicious Keywords'],
+  ['has_hex_encoding', 'Hex Encoding'],
+  ['digit_letter_ratio', 'Digit Ratio'],
+  ['has_punycode', 'Punycode/IDN'],
+  ['url_entropy', 'URL Entropy'],
+];
+
+function getFeatureNote(name, val) {
+  const notes = {
+    'has_ip': val === 1 ? 'IP address in URL — common in phishing' : '',
+    'has_at': val === 1 ? '@ symbol can hide the real domain' : '',
+    'uses_https': val === 0 ? 'No HTTPS — unencrypted connection' : '',
+    'has_suspicious_tld': val === 1 ? 'Top-level domain associated with phishing' : '',
+    'num_suspicious_words': val >= 2 ? `${val} suspicious keywords detected` : '',
+    'url_length': val > 75 ? `Unusually long URL (${val} chars)` : '',
+    'num_dots': val > 5 ? `Excessive subdomains (${val} dots)` : '',
+    'has_punycode': val === 1 ? 'Punycode detected — possible homograph attack' : '',
+    'has_hex_encoding': val === 1 ? 'Hex-encoded characters in URL' : '',
+    'has_port': val === 1 ? 'Non-standard port in URL' : '',
+  };
+  return notes[name] || '';
+}
+
+function isFeatureSuspicious(name, val) {
+  if (name === 'has_ip' && val === 1) return true;
+  if (name === 'has_at' && val === 1) return true;
+  if (name === 'uses_https' && val === 0) return true;
+  if (name === 'has_suspicious_tld' && val === 1) return true;
+  if (name === 'num_suspicious_words' && val >= 2) return true;
+  if (name === 'url_length' && val > 75) return true;
+  if (name === 'num_dots' && val > 5) return true;
+  if (name === 'has_punycode' && val === 1) return true;
+  if (name === 'has_hex_encoding' && val === 1) return true;
+  if (name === 'has_port' && val === 1) return true;
+  return false;
+}
+
+function scanUrl() {
+  const input = document.getElementById('urlInput');
+  const url = input.value.trim();
+  if (!url) { showError('Please enter a URL to scan'); return; }
+
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('error').classList.add('hidden');
+  document.getElementById('infoSection').classList.add('hidden');
+  document.getElementById('loading').classList.remove('hidden');
+
+  setTimeout(() => {
+    const features = extractFeatures(url);
+    const riskScore = calculateRiskScore(features);
+    const isPhishing = riskScore >= 40;
+    let riskLevel, riskColor;
+    if (riskScore >= 75) { riskLevel = 'HIGH'; riskColor = '#FF3D00'; }
+    else if (riskScore >= 40) { riskLevel = 'MEDIUM'; riskColor = '#FFD600'; }
+    else { riskLevel = 'LOW'; riskColor = '#00C853'; }
+
+    displayResults(url, features, riskScore, riskLevel, riskColor, isPhishing);
+  }, 600);
+}
+
+function displayResults(url, features, riskScore, riskLevel, riskColor, isPhishing) {
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+
+  const gauge = document.getElementById('gaugeCircle');
+  gauge.style.borderColor = riskColor;
+  document.getElementById('riskScore').textContent = riskScore;
+
+  const riskLevelEl = document.getElementById('riskLevel');
+  riskLevelEl.textContent = riskLevel + ' RISK';
+  riskLevelEl.style.color = riskColor;
+
+  document.getElementById('scannedUrl').textContent = url;
+  const legitPct = 100 - riskScore;
+  document.getElementById('legitBar').style.width = legitPct + '%';
+  document.getElementById('legitPct').textContent = legitPct + '%';
+  document.getElementById('phishBar').style.width = riskScore + '%';
+  document.getElementById('phishPct').textContent = riskScore + '%';
+
+  let suspiciousCount = 0;
+  const featureList = document.getElementById('featureList');
+  featureList.innerHTML = '';
+
+  FEATURE_NAMES.forEach(([key, name]) => {
+    const val = features[key];
+    const suspicious = isFeatureSuspicious(key, val);
+    if (suspicious) suspiciousCount++;
+    const note = getFeatureNote(key, val);
+    let displayVal = val;
+    if (typeof val === 'number' && val % 1 !== 0) displayVal = val.toFixed(3);
+
+    const item = document.createElement('div');
+    item.className = 'feature-item' + (suspicious ? ' suspicious' : '');
+    item.innerHTML = `
+      <span class="feature-icon">${suspicious ? '⚠️' : '✓'}</span>
+      <span class="feature-name">${name}</span>
+      <span class="feature-value">${displayVal}</span>
+      ${note ? `<span class="feature-note">${note}</span>` : ''}
+    `;
+    featureList.appendChild(item);
+  });
+
+  document.getElementById('suspiciousCount').textContent = suspiciousCount;
+  const verdict = document.getElementById('verdict');
+  verdict.textContent = isPhishing ? 'PHISHING' : 'SAFE';
+  verdict.style.color = isPhishing ? 'var(--red)' : 'var(--green)';
+
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function testUrl(url) {
+  document.getElementById('urlInput').value = url;
+  scanUrl();
+}
+
+function showError(msg) {
+  const error = document.getElementById('error');
+  error.textContent = msg;
+  error.classList.remove('hidden');
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('infoSection').classList.remove('hidden');
+}
+
+document.getElementById('urlInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') scanUrl();
+});
+  </script>
+</body>
+</html>
