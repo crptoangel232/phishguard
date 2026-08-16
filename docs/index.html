@@ -181,16 +181,16 @@ footer p{font-size:12px;color:var(--text-dim);}
 
   <!-- Tool Selection Grid -->
   <div class="tool-grid" id="toolGrid">
-    <div class="tool-card active" onclick="showTool('phishing')"><div class="tool-icon">🔍</div><div class="tool-info"><h3>Phishing Detector</h3><p>18-feature ML URL analysis</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
-    <div class="tool-card" onclick="showTool('scanner')"><div class="tool-icon">🖥️</div><div class="tool-info"><h3>Network Scanner</h3><p>68 ports, service detection</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
-    <div class="tool-card" onclick="showTool('password')"><div class="tool-icon">🔑</div><div class="tool-info"><h3>Password Auditor</h3><p>Entropy, crack-time, patterns</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
-    <div class="tool-card" onclick="showTool('sqli')"><div class="tool-icon">💉</div><div class="tool-info"><h3>SQLi & XSS Detector</h3><p>30 payloads, injection points</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
-    <div class="tool-card" onclick="showTool('logs')"><div class="tool-icon">📋</div><div class="tool-info"><h3>Log Analyzer</h3><p>Brute force, attack chains</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
-    <div class="tool-card" onclick="showTool('ioc')"><div class="tool-icon">🚨</div><div class="tool-info"><h3>IOC Scanner</h3><p>IP, domain, hash, URL reputation</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
-    <div class="tool-card" onclick="showTool('timeline')"><div class="tool-icon">🕐</div><div class="tool-info"><h3>Forensic Timeline</h3><p>Kill Chain + MITRE ATT&CK</p></div><span class="tool-category cat-ir">Incident Response</span></div>
-    <div class="tool-card" onclick="showTool('playbook')"><div class="tool-icon">📖</div><div class="tool-info"><h3>IR Playbook Engine</h3><p>NIST SP 800-61 procedures</p></div><span class="tool-category cat-ir">Incident Response</span></div>
-    <div class="tool-card" onclick="showTool('siem')"><div class="tool-icon">📊</div><div class="tool-info"><h3>Mini-SIEM Dashboard</h3><p>10 correlation rules, alerting</p></div><span class="tool-category cat-siem">SIEM</span></div>
-    <div class="tool-card" onclick="showTool('correlation')"><div class="tool-icon">🔗</div><div class="tool-info"><h3>Alert Correlation</h3><p>Dedup, aggregate, incident grouping</p></div><span class="tool-category cat-siem">SIEM</span></div>
+    <div class="tool-card active" onclick="showTool('phishing',this)"><div class="tool-icon">🔍</div><div class="tool-info"><h3>Phishing Detector</h3><p>18-feature ML URL analysis</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('scanner',this)"><div class="tool-icon">🖥️</div><div class="tool-info"><h3>Network Scanner</h3><p>68 ports, service detection</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('password',this)"><div class="tool-icon">🔑</div><div class="tool-info"><h3>Password Auditor</h3><p>Entropy, crack-time, patterns</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('sqli',this)"><div class="tool-icon">💉</div><div class="tool-info"><h3>SQLi & XSS Detector</h3><p>30 payloads, injection points</p></div><span class="tool-category cat-eh">Ethical Hacking</span></div>
+    <div class="tool-card" onclick="showTool('logs',this)"><div class="tool-icon">📋</div><div class="tool-info"><h3>Log Analyzer</h3><p>Brute force, attack chains</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
+    <div class="tool-card" onclick="showTool('ioc',this)"><div class="tool-icon">🚨</div><div class="tool-info"><h3>IOC Scanner</h3><p>IP, domain, hash, URL reputation</p></div><span class="tool-category cat-soc">SOC Analysis</span></div>
+    <div class="tool-card" onclick="showTool('timeline',this)"><div class="tool-icon">🕐</div><div class="tool-info"><h3>Forensic Timeline</h3><p>Kill Chain + MITRE ATT&CK</p></div><span class="tool-category cat-ir">Incident Response</span></div>
+    <div class="tool-card" onclick="showTool('playbook',this)"><div class="tool-icon">📖</div><div class="tool-info"><h3>IR Playbook Engine</h3><p>NIST SP 800-61 procedures</p></div><span class="tool-category cat-ir">Incident Response</span></div>
+    <div class="tool-card" onclick="showTool('siem',this)"><div class="tool-icon">📊</div><div class="tool-info"><h3>Mini-SIEM Dashboard</h3><p>10 correlation rules, alerting</p></div><span class="tool-category cat-siem">SIEM</span></div>
+    <div class="tool-card" onclick="showTool('correlation',this)"><div class="tool-icon">🔗</div><div class="tool-info"><h3>Alert Correlation</h3><p>Dedup, aggregate, incident grouping</p></div><span class="tool-category cat-siem">SIEM</span></div>
   </div>
 
   <!-- PANEL 1: PHISHING -->
@@ -311,10 +311,11 @@ footer p{font-size:12px;color:var(--text-dim);}
 
 <script>
 // ==================== TAB SWITCHING ====================
-function showTool(tool){
+function showTool(tool,el){
   document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if(el)el.classList.add('active');
+  else{var cards=document.querySelectorAll('.tool-card');cards.forEach(function(c){if(c.getAttribute('onclick')&&c.getAttribute('onclick').indexOf(tool)>-1)c.classList.add('active');});}
   document.getElementById(tool).classList.add('active');
 }
 
@@ -497,7 +498,7 @@ function doSqliScan(url){
       xssPoints.push({param:k,value:v,risk:'high',note:'Parameter "'+k+'" likely gets reflected in the page'});
   });
   const sqliPayloads=["'","\"","'--","1 OR 1=1","' OR '1'='1","' OR 1=1--","' UNION SELECT NULL--","'; SELECT 1--","' AND '1'='2","/**/","0x41","CHAR(65)","' AND SLEEP(0)--","' OR 'x' LIKE 'x"];
-  const xssPayloads=["<script>alert(1)</script>","<img src=x onerror=alert(1)>","<body onload=alert(1)>","<svg onload=alert(1)>","<iframe src=javascript:alert(1)>","javascript:alert(1)","<scr<script>ipt>alert(1)</script>",'" onmouseover=alert(1) "',"<style>@import('javascript:alert(1)')</style>","<object data=javascript:alert(1)>","\"><script>alert(1)</script>","<meta http-equiv=refresh content=0;url=javascript:alert(1)>","<form action=javascript:alert(1)><input type=submit>","{{constructor.constructor('alert(1)')()}}"];
+  const xssPayloads=["<script>alert(1)<\/script>","<img src=x onerror=alert(1)>","<body onload=alert(1)>","<svg onload=alert(1)>","<iframe src=javascript:alert(1)>","javascript:alert(1)","<scr<script>ipt>alert(1)<\/script>",'" onmouseover=alert(1) "',"<style>@import('javascript:alert(1)')</style>","<object data=javascript:alert(1)>","\"><script>alert(1)<\/script>","<meta http-equiv=refresh content=0;url=javascript:alert(1)>","<form action=javascript:alert(1)><input type=submit>","{{constructor.constructor('alert(1)')()}}"];
   let risk='LOW';if(sqliPoints.some(p=>p.risk==='high'))risk='HIGH';else if(sqliPoints.length)risk='MEDIUM';
   return{sqliPoints,xssPoints,sqliPayloads,xssPayloads,risk};
 }
