@@ -3,96 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhishGuard — Security Suite</title>
+<title>PhishGuard — Security Toolkit</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#15130f;color:#e0ddd5;line-height:1.65;}
-.wrap{max-width:680px;margin:0 auto;padding:60px 24px;}
-header{margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid #2a2620;}
-header .label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#c4a03a;font-weight:600;margin-bottom:12px;}
-header h1{font-family:Georgia,"Times New Roman",serif;font-size:34px;font-weight:400;letter-spacing:-0.5px;margin-bottom:12px;}
-header p{font-size:16px;color:#8a857a;max-width:520px;}
-nav{display:flex;gap:24px;margin-top:20px;font-size:14px;}
-nav a{color:#c4a03a;text-decoration:none;border-bottom:1px solid transparent;}
-nav a:hover{border-bottom-color:#c4a03a;}
-.section{margin-bottom:48px;}
-.section h2{font-family:Georgia,serif;font-size:20px;font-weight:400;margin-bottom:16px;}
-.feat{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #242118;}
-.feat:last-child{border-bottom:none;}
-.feat .fn{font-family:Georgia,serif;font-size:16px;color:#c4a03a;min-width:24px;}
-.feat h3{font-size:15px;font-weight:600;margin-bottom:4px;}
-.feat p{font-size:14px;color:#8a857a;}
-.stack{display:flex;flex-wrap:wrap;gap:8px;}
-.stack span{font-size:13px;color:#8a857a;padding:4px 12px;border:1px solid #2a2620;border-radius:2px;}
-footer{padding-top:24px;border-top:1px solid #2a2620;font-size:13px;color:#5a554c;display:flex;justify-content:space-between;}
-footer a{color:#8a857a;text-decoration:none;}
-footer a:hover{text-decoration:underline;}
-@media(max-width:600px){.wrap{padding:40px 20px;}header h1{font-size:26px;}footer{flex-direction:column;gap:8px;}}
+body{font-family:'JetBrains Mono','Courier New',monospace;background:#131210;color:#d8d4cc;line-height:1.65;}
+.w{max-width:640px;margin:0 auto;padding:56px 24px;}
+.hd{margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid #2a2722;}
+.hd .tg{font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;color:#b89530;margin-bottom:14px;}
+.hd h1{font-family:'JetBrains Mono','Courier New',monospace;font-size:30px;font-weight:500;letter-spacing:-1px;margin-bottom:12px;}
+.hd .ds{font-size:15px;color:#7a7568;max-width:500px;margin-bottom:16px;}
+.nv{display:flex;gap:20px;font-size:13px;}
+.nv a{color:#b89530;text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px;}
+.nv a:hover{border-bottom-color:#b89530;}
+.fl{display:grid;grid-template-columns:1fr 1fr;gap:0;}.f{padding:20px 0;border-bottom:1px solid #2a2722;}.f:nth-child(odd){padding-right:20px;}@media(max-width:560px){.fl{grid-template-columns:1fr;}.f:nth-child(odd){padding-right:0;}}
+.f{display:flex;gap:14px;}
+.fn{font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;color:#b89530;min-width:22px;flex-shrink:0;padding-top:2px;}
+.f h3{font-size:14px;font-weight:500;margin-bottom:3px;}
+.f p{font-size:13px;color:#7a7568;}
+.stats{display:flex;gap:28px;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #2a2722;}
+.s{display:flex;flex-direction:column;}
+.sv{font-family:'JetBrains Mono','Courier New',monospace;font-size:24px;font-weight:400;color:#b89530;}
+.sl{font-size:11px;color:#4a4640;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.se{margin-top:40px;margin-bottom:40px;}
+.se h2{font-family:'JetBrains Mono','Courier New',monospace;font-size:17px;font-weight:400;margin-bottom:14px;}
+.sk{display:flex;flex-wrap:wrap;gap:6px;}
+.sk span{font-size:12px;color:#7a7568;padding:3px 10px;border:1px solid #2a2722;}
+.ft{padding-top:20px;border-top:1px solid #2a2722;font-size:12px;color:#4a4640;display:flex;justify-content:space-between;}
+.ft a{color:#7a7568;text-decoration:none;}
+.ft a:hover{text-decoration:underline;}
+@media(max-width:600px){.w{padding:40px 20px;}.hd h1{font-size:24px;}.ft{flex-direction:column;gap:6px;}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-<div class="label">Cybersecurity</div>
+<div class="w">
+<div class="hd">
+<div class="tg">Ten tools for people who break things to prove they can be broken.</div>
 <h1>PhishGuard</h1>
-<p>Ten tools for ethical hacking, SOC analysis, and incident response. Phishing detection, port scanning, password auditing, SIEM dashboard, and more.</p>
-<nav>
+<p class="ds">Ethical hacking, SOC analysis, and incident response in one suite. Built to test, detect, and respond — not to look pretty on a dashboard nobody reads.</p>
+<div class="nv">
 <a href="https://github.com/crptoangel232/phishguard" target="_blank">Source</a>
 <a href="https://crptoangel232.github.io/My-Portfolio-Website/">Portfolio</a>
-</nav>
-</header>
-<section class="section">
-<h2>What it does</h2>
+</div>
+</div>
 
-<div class="feat">
-<div class="fn">01</div>
-<div><h3>Phishing URL Detector</h3><p>ML-based classification of malicious URLs using feature extraction.</p></div>
+<div class="fl">
+<div class="f"><span class="fn">01</span><div><h3>Phishing URL Detector</h3><p>ML classification using 18 URL features. Trained on 125,000 labeled samples.</p></div></div>
+<div class="f"><span class="fn">02</span><div><h3>Network Port Scanner</h3><p>Scans 68 common ports. Identifies services, versions, and exposure risk.</p></div></div>
+<div class="f"><span class="fn">03</span><div><h3>Password Auditor</h3><p>Entropy analysis, pattern detection, and crack-time estimation across hashcat scenarios.</p></div></div>
+<div class="f"><span class="fn">04</span><div><h3>SQLi / XSS Detector</h3><p>Safe payload injection against web forms. Detects both SQLi and cross-site scripting.</p></div></div>
+<div class="f"><span class="fn">05</span><div><h3>Log Analyzer</h3><p>Parses auth logs, SSH, Apache, Windows Event. Correlates events into attack chains.</p></div></div>
+<div class="f"><span class="fn">06</span><div><h3>IOC Scanner</h3><p>Check file hashes, IPs, domains against threat intelligence feeds. Bulk scan from logs.</p></div></div>
+<div class="f"><span class="fn">07</span><div><h3>Forensic Timeline</h3><p>Builds incident timelines mapped to Kill Chain and MITRE ATT&CK stages.</p></div></div>
+<div class="f"><span class="fn">08</span><div><h3>IR Playbook Engine</h3><p>NIST SP 800-61 aligned. Eight incident types with containment and evidence steps.</p></div></div>
+<div class="f"><span class="fn">09</span><div><h3>Mini-SIEM Dashboard</h3><p>Ten correlation rules. Real-time event feed with severity scoring.</p></div></div>
+<div class="f"><span class="fn">10</span><div><h3>Alert Correlation</h3><p>Groups and prioritizes alerts. Cuts noise so you see what actually matters.</p></div></div>
+
 </div>
-<div class="feat">
-<div class="fn">02</div>
-<div><h3>Network Port Scanner</h3><p>Scans 68 common ports with service detection and risk scoring.</p></div>
-</div>
-<div class="feat">
-<div class="fn">03</div>
-<div><h3>Password Auditor</h3><p>Tests password strength against entropy, common patterns, and breach lists.</p></div>
-</div>
-<div class="feat">
-<div class="fn">04</div>
-<div><h3>SQLi/XSS Detector</h3><p>Identifies injection and cross-site scripting vectors in input.</p></div>
-</div>
-<div class="feat">
-<div class="fn">05</div>
-<div><h3>Log Analyzer</h3><p>Parses logs, correlates events, and flags suspicious activity patterns.</p></div>
-</div>
-<div class="feat">
-<div class="fn">06</div>
-<div><h3>IOC Scanner</h3><p>Checks indicators of compromise against known threat intelligence.</p></div>
-</div>
-<div class="feat">
-<div class="fn">07</div>
-<div><h3>Forensic Timeline</h3><p>Builds incident timelines mapped to Kill Chain and MITRE ATT&CK.</p></div>
-</div>
-<div class="feat">
-<div class="fn">08</div>
-<div><h3>IR Playbook Engine</h3><p>NIST SP 800-61 aligned playbooks for 8 incident types.</p></div>
-</div>
-<div class="feat">
-<div class="fn">09</div>
-<div><h3>Mini-SIEM Dashboard</h3><p>Ten correlation rules with real-time event monitoring.</p></div>
-</div>
-<div class="feat">
-<div class="fn">10</div>
-<div><h3>Alert Correlation</h3><p>Groups and prioritizes alerts to cut noise and find real threats.</p></div>
-</div>
-</section>
-<section class="section">
+<div class="se">
 <h2>Built with</h2>
-<div class="stack"><span>Python</span><span>JavaScript</span><span>scikit-learn</span><span>Flask</span><span>Socket</span><span>MITRE ATT&CK</span></div>
-</section>
-<footer>
+<div class="sk"><span>Python</span><span>scikit-learn</span><span>Flask</span><span>Socket</span><span>MITRE ATT&CK</span><span>NIST SP 800-61</span></div>
+</div>
+<div class="ft">
 <span>Albert Taylor — Sierra Leone</span>
 <a href="https://github.com/crptoangel232" target="_blank">github.com/crptoangel232</a>
-</footer>
+</div>
 </div>
 </body>
 </html>
